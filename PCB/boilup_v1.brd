@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.4.0">
+<eagle version="7.7.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -150,7 +150,7 @@
 <wire x1="0" y1="54.6" x2="0" y2="0" width="0" layer="20"/>
 </plain>
 <libraries>
-<library name="resistor" urn="urn:adsk.eagle:library:348">
+<library name="resistor">
 <description>&lt;b&gt;Resistors, Capacitors, Inductors&lt;/b&gt;&lt;p&gt;
 Based on the previous libraries:
 &lt;ul&gt;
@@ -1220,7 +1220,7 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 &lt;/table&gt;
 &lt;/BODY&gt;&lt;/HTML&gt;</description>
 <packages>
-<package name="C0603K" urn="urn:adsk.eagle:footprint:25770/1" library_version="1">
+<package name="C0603K">
 <description>&lt;b&gt;Ceramic Chip Capacitor KEMET 0603 reflow solder&lt;/b&gt;&lt;p&gt;
 Metric Code Size 1608</description>
 <wire x1="-0.725" y1="0.35" x2="0.725" y2="0.35" width="0.1016" layer="51"/>
@@ -1232,7 +1232,7 @@ Metric Code Size 1608</description>
 <rectangle x1="-0.8" y1="-0.4" x2="-0.45" y2="0.4" layer="51"/>
 <rectangle x1="0.45" y1="-0.4" x2="0.8" y2="0.4" layer="51"/>
 </package>
-<package name="R0603" urn="urn:adsk.eagle:footprint:25626/1" library_version="1">
+<package name="R0603">
 <description>&lt;b&gt;RESISTOR&lt;/b&gt;</description>
 <wire x1="-0.432" y1="-0.356" x2="0.432" y2="-0.356" width="0.1524" layer="51"/>
 <wire x1="0.432" y1="0.356" x2="-0.432" y2="0.356" width="0.1524" layer="51"/>
@@ -1249,21 +1249,12 @@ Metric Code Size 1608</description>
 <rectangle x1="-0.1999" y1="-0.4001" x2="0.1999" y2="0.4001" layer="35"/>
 </package>
 </packages>
-<packages3d>
-<package3d name="C0603K" urn="urn:adsk.eagle:package:26200/1" type="box" library_version="1">
-<description>Ceramic Chip Capacitor KEMET 0603 reflow solder
-Metric Code Size 1608</description>
-</package3d>
-<package3d name="R0603" urn="urn:adsk.eagle:package:26057/1" type="box" library_version="1">
-<description>RESISTOR</description>
-</package3d>
-</packages3d>
 </library>
-<library name="pinhead" urn="urn:adsk.eagle:library:325">
+<library name="pinhead">
 <description>&lt;b&gt;Pin Header Connectors&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
 <packages>
-<package name="2X04" urn="urn:adsk.eagle:footprint:22351/1" library_version="2">
+<package name="2X04">
 <description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
 <wire x1="-5.08" y1="-1.905" x2="-4.445" y2="-2.54" width="0.1524" layer="21"/>
 <wire x1="-3.175" y1="-2.54" x2="-2.54" y2="-1.905" width="0.1524" layer="21"/>
@@ -1313,7 +1304,7 @@ Metric Code Size 1608</description>
 <rectangle x1="3.556" y1="1.016" x2="4.064" y2="1.524" layer="51"/>
 <rectangle x1="3.556" y1="-1.524" x2="4.064" y2="-1.016" layer="51"/>
 </package>
-<package name="1X07" urn="urn:adsk.eagle:footprint:22367/1" library_version="2">
+<package name="1X07">
 <description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
 <wire x1="3.81" y1="0.635" x2="4.445" y2="1.27" width="0.1524" layer="21"/>
 <wire x1="4.445" y1="1.27" x2="5.715" y2="1.27" width="0.1524" layer="21"/>
@@ -1382,7 +1373,7 @@ Metric Code Size 1608</description>
 <rectangle x1="-7.874" y1="-0.254" x2="-7.366" y2="0.254" layer="51"/>
 <rectangle x1="7.366" y1="-0.254" x2="7.874" y2="0.254" layer="51"/>
 </package>
-<package name="1X06" urn="urn:adsk.eagle:footprint:22361/1" library_version="2">
+<package name="1X06">
 <description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
 <wire x1="0.635" y1="1.27" x2="1.905" y2="1.27" width="0.1524" layer="21"/>
 <wire x1="1.905" y1="1.27" x2="2.54" y2="0.635" width="0.1524" layer="21"/>
@@ -1442,7 +1433,7 @@ Metric Code Size 1608</description>
 <rectangle x1="-6.604" y1="-0.254" x2="-6.096" y2="0.254" layer="51"/>
 <rectangle x1="6.096" y1="-0.254" x2="6.604" y2="0.254" layer="51"/>
 </package>
-<package name="1X02" urn="urn:adsk.eagle:footprint:22309/1" library_version="2">
+<package name="1X02">
 <description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
 <wire x1="-1.905" y1="1.27" x2="-0.635" y2="1.27" width="0.1524" layer="21"/>
 <wire x1="-0.635" y1="1.27" x2="0" y2="0.635" width="0.1524" layer="21"/>
@@ -1466,7 +1457,7 @@ Metric Code Size 1608</description>
 <rectangle x1="-1.524" y1="-0.254" x2="-1.016" y2="0.254" layer="51"/>
 <rectangle x1="1.016" y1="-0.254" x2="1.524" y2="0.254" layer="51"/>
 </package>
-<package name="1X03" urn="urn:adsk.eagle:footprint:22340/1" library_version="2">
+<package name="1X03">
 <description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
 <wire x1="-3.175" y1="1.27" x2="-1.905" y2="1.27" width="0.1524" layer="21"/>
 <wire x1="-1.905" y1="1.27" x2="-1.27" y2="0.635" width="0.1524" layer="21"/>
@@ -1499,7 +1490,7 @@ Metric Code Size 1608</description>
 <rectangle x1="-2.794" y1="-0.254" x2="-2.286" y2="0.254" layer="51"/>
 <rectangle x1="2.286" y1="-0.254" x2="2.794" y2="0.254" layer="51"/>
 </package>
-<package name="2X05" urn="urn:adsk.eagle:footprint:22358/1" library_version="2">
+<package name="2X05">
 <description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
 <wire x1="-6.35" y1="-1.905" x2="-5.715" y2="-2.54" width="0.1524" layer="21"/>
 <wire x1="-4.445" y1="-2.54" x2="-3.81" y2="-1.905" width="0.1524" layer="21"/>
@@ -1561,26 +1552,6 @@ Metric Code Size 1608</description>
 <rectangle x1="4.826" y1="-1.524" x2="5.334" y2="-1.016" layer="51"/>
 </package>
 </packages>
-<packages3d>
-<package3d name="2X04" urn="urn:adsk.eagle:package:22461/2" type="model" library_version="2">
-<description>PIN HEADER</description>
-</package3d>
-<package3d name="1X07" urn="urn:adsk.eagle:package:22477/1" type="box" library_version="2">
-<description>PIN HEADER</description>
-</package3d>
-<package3d name="1X06" urn="urn:adsk.eagle:package:22472/2" type="model" library_version="2">
-<description>PIN HEADER</description>
-</package3d>
-<package3d name="1X02" urn="urn:adsk.eagle:package:22435/2" type="model" library_version="2">
-<description>PIN HEADER</description>
-</package3d>
-<package3d name="1X03" urn="urn:adsk.eagle:package:22458/2" type="model" library_version="2">
-<description>PIN HEADER</description>
-</package3d>
-<package3d name="2X05" urn="urn:adsk.eagle:package:22470/2" type="model" library_version="2">
-<description>PIN HEADER</description>
-</package3d>
-</packages3d>
 </library>
 <library name="cherrymx">
 <description>Cherry MX Keyswitch PCB footprints</description>
@@ -1699,11 +1670,11 @@ Metric Code Size 1608</description>
 </package>
 </packages>
 </library>
-<library name="texas" urn="urn:adsk.eagle:library:387">
+<library name="texas">
 <description>&lt;b&gt;Texas Instruments Devices&lt;/b&gt;&lt;p&gt;
  &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
 <packages>
-<package name="S-PDSO-G08" library_version="2">
+<package name="S-PDSO-G08">
 <description>DGN (S-PDSO-G8) PowerPAD (TM) Plastic Small-Outline Package&lt;p&gt;
 Source: http://focus.ti.com/lit/ds/symlink/ths4211.pdf</description>
 <wire x1="-1.425" y1="1.4067" x2="1.425" y2="1.4067" width="0.2032" layer="21"/>
@@ -1735,7 +1706,7 @@ Source: http://focus.ti.com/lit/ds/symlink/ths4211.pdf</description>
 </package>
 </packages>
 </library>
-<library name="diode" urn="urn:adsk.eagle:library:210">
+<library name="diode">
 <description>&lt;b&gt;Diodes&lt;/b&gt;&lt;p&gt;
 Based on the following sources:
 &lt;ul&gt;
@@ -1746,7 +1717,7 @@ Based on the following sources:
 &lt;/ul&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
 <packages>
-<package name="DO-214AC" urn="urn:adsk.eagle:footprint:43216/1" library_version="2">
+<package name="DO-214AC">
 <description>&lt;b&gt;SURFACE MOUNT GENERAL RECTIFIER&lt;/b&gt; JEDEC DO-214AC molded platic body&lt;p&gt;
 Method 2026&lt;br&gt;
 Source: http://www.kingtronics.com/SMD_M7/M7_SMD_4007.pdf</description>
@@ -1766,20 +1737,13 @@ Source: http://www.kingtronics.com/SMD_M7/M7_SMD_4007.pdf</description>
 <rectangle x1="-1.75" y1="-1.225" x2="-1.075" y2="1.225" layer="51"/>
 </package>
 </packages>
-<packages3d>
-<package3d name="DO-214AC" urn="urn:adsk.eagle:package:43416/2" type="model" library_version="2">
-<description>SURFACE MOUNT GENERAL RECTIFIER JEDEC DO-214AC molded platic body
-Method 2026
-Source: http://www.kingtronics.com/SMD_M7/M7_SMD_4007.pdf</description>
-</package3d>
-</packages3d>
 </library>
-<library name="led" urn="urn:adsk.eagle:library:259">
+<library name="led">
 <description>&lt;b&gt;LEDs&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;&lt;br&gt;
 Extended by Federico Battaglin &lt;author&gt;&amp;lt;federico.rd@fdpinternational.com&amp;gt;&lt;/author&gt; with DUOLED</description>
 <packages>
-<package name="SML0805" urn="urn:adsk.eagle:footprint:15683/1" library_version="1">
+<package name="SML0805">
 <description>&lt;b&gt;SML0805-2CW-TR (0805 PROFILE)&lt;/b&gt; COOL WHITE&lt;p&gt;
 Source: http://www.ledtronics.com/ds/smd-0603/Dstr0093.pdf</description>
 <wire x1="-0.95" y1="-0.55" x2="0.95" y2="-0.55" width="0.1016" layer="51"/>
@@ -1797,12 +1761,6 @@ Source: http://www.ledtronics.com/ds/smd-0603/Dstr0093.pdf</description>
 <text x="-1.5" y="-2" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 </packages>
-<packages3d>
-<package3d name="SML0805" urn="urn:adsk.eagle:package:15830/1" type="box" library_version="1">
-<description>SML0805-2CW-TR (0805 PROFILE) COOL WHITE
-Source: http://www.ledtronics.com/ds/smd-0603/Dstr0093.pdf</description>
-</package3d>
-</packages3d>
 </library>
 <library name="microbuilder">
 <description>&lt;h2&gt;&lt;b&gt;microBuilder.eu&lt;/b&gt; Eagle Footprint Library&lt;/h2&gt;
@@ -1940,11 +1898,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </package>
 </packages>
 </library>
-<library name="holes" urn="urn:adsk.eagle:library:237">
+<library name="holes">
 <description>&lt;b&gt;Mounting Holes and Pads&lt;/b&gt;&lt;p&gt;
 &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
 <packages>
-<package name="2,8" urn="urn:adsk.eagle:footprint:14239/1" library_version="1">
+<package name="2,8">
 <description>&lt;b&gt;MOUNTING HOLE&lt;/b&gt; 2.8 mm with drill center</description>
 <wire x1="-1.778" y1="0" x2="0" y2="-1.778" width="2.286" layer="51" curve="90" cap="flat"/>
 <wire x1="0" y1="1.778" x2="1.778" y2="0" width="2.286" layer="51" curve="-90" cap="flat"/>
@@ -1959,11 +1917,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <hole x="0" y="0" drill="2.8"/>
 </package>
 </packages>
-<packages3d>
-<package3d name="2,8" urn="urn:adsk.eagle:package:14271/1" type="box" library_version="1">
-<description>MOUNTING HOLE 2.8 mm with drill center</description>
-</package3d>
-</packages3d>
 </library>
 </libraries>
 <attributes>
@@ -2050,9 +2003,10 @@ design rules under a new name.</description>
 <param name="slThermalsForVias" value="0"/>
 <param name="dpMaxLengthDifference" value="10mm"/>
 <param name="dpGapFactor" value="2.5"/>
+<param name="checkGrid" value="0"/>
+<param name="checkAngle" value="0"/>
 <param name="checkFont" value="1"/>
 <param name="checkRestrict" value="1"/>
-<param name="checkStop" value="0"/>
 <param name="useDiameter" value="13"/>
 <param name="maxErrors" value="50"/>
 </designrules>
@@ -2153,25 +2107,25 @@ design rules under a new name.</description>
 </pass>
 </autorouter>
 <elements>
-<element name="ESP8266" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="2X04" package3d_urn="urn:adsk.eagle:package:22461/2" value="" x="38.1" y="10.16"/>
-<element name="KEYPAD" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="1X07" package3d_urn="urn:adsk.eagle:package:22477/1" value="" x="9.906" y="2.667" smashed="yes" rot="R180">
+<element name="ESP8266" library="pinhead" package="2X04" value="" x="38.1" y="10.16"/>
+<element name="KEYPAD" library="pinhead" package="1X07" value="" x="9.906" y="2.667" smashed="yes" rot="R180">
 <attribute name="NAME" x="8.7122" y="5.9182" size="1.27" layer="25" ratio="10" rot="R180"/>
 <attribute name="VALUE" x="18.796" y="5.842" size="1.27" layer="27" rot="R180"/>
 </element>
-<element name="LCD" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="1X06" package3d_urn="urn:adsk.eagle:package:22472/2" value="" x="40.64" y="30.48" rot="R270"/>
-<element name="MOT" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="1X02" package3d_urn="urn:adsk.eagle:package:22435/2" value="" x="3.81" y="26.67" smashed="yes" rot="R270">
+<element name="LCD" library="pinhead" package="1X06" value="" x="41.91" y="41.91" rot="R90"/>
+<element name="MOT" library="pinhead" package="1X02" value="" x="3.81" y="26.67" smashed="yes" rot="R270">
 <attribute name="NAME" x="1.9812" y="25.3238" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="0.635" y="29.21" size="1.27" layer="27" rot="R270"/>
 </element>
-<element name="PWM" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="1X03" package3d_urn="urn:adsk.eagle:package:22458/2" value="" x="3.81" y="34.29" smashed="yes" rot="R270">
+<element name="PWM" library="pinhead" package="1X03" value="" x="3.81" y="34.29" smashed="yes" rot="R270">
 <attribute name="NAME" x="1.9812" y="32.9438" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="0.635" y="38.1" size="1.27" layer="27" rot="R270"/>
 </element>
-<element name="R1" library="resistor" library_urn="urn:adsk.eagle:library:348" package="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="" x="24.13" y="36.83" rot="MR180"/>
-<element name="SPKR" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="1X02" package3d_urn="urn:adsk.eagle:package:22435/2" value="" x="40.64" y="17.78" rot="R90"/>
-<element name="SWD" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="1X06" package3d_urn="urn:adsk.eagle:package:22472/2" value="" x="2.54" y="15.24" rot="R270"/>
+<element name="R1" library="resistor" package="R0603" value="" x="24.13" y="36.83" rot="MR180"/>
+<element name="SPKR" library="pinhead" package="1X02" value="" x="40.64" y="17.78" rot="R90"/>
+<element name="SWD" library="pinhead" package="1X06" value="" x="2.54" y="15.24" rot="R270"/>
 <element name="U$1" library="cherrymx" package="CHERRY-MX" value="CHERRY-MX" x="22.86" y="46.99"/>
-<element name="IC1" library="texas" library_urn="urn:adsk.eagle:library:387" package="S-PDSO-G08" value="THS4211" x="33.02" y="21.59" smashed="yes" rot="MR90">
+<element name="IC1" library="texas" package="S-PDSO-G08" value="THS4211" x="33.02" y="21.59" smashed="yes" rot="MR90">
 <attribute name="MF" value="TEXAS INSTRUMENT CONNECTORS" x="33.02" y="21.59" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MPN" value="THS4211DGK" x="33.02" y="21.59" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="NAME" x="32.777" y="24.537" size="1.27" layer="26" rot="MR180"/>
@@ -2180,34 +2134,34 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="30.745" y="24.515" size="1.27" layer="28" rot="MR180"/>
 </element>
 <element name="U$2" library="smarttle" package="DPAK" value="STD20NF06L" x="17.78" y="34.29"/>
-<element name="D1" library="diode" library_urn="urn:adsk.eagle:library:210" package="DO-214AC" package3d_urn="urn:adsk.eagle:package:43416/2" value="" x="8.89" y="27.94"/>
-<element name="C2" library="resistor" library_urn="urn:adsk.eagle:library:348" package="C0603K" package3d_urn="urn:adsk.eagle:package:26200/1" value="10uF" x="38.1" y="20.32" rot="MR270"/>
-<element name="R4" library="resistor" library_urn="urn:adsk.eagle:library:348" package="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="" x="33.02" y="19.05" smashed="yes" rot="MR0">
+<element name="D1" library="diode" package="DO-214AC" value="" x="8.89" y="27.94"/>
+<element name="C2" library="resistor" package="C0603K" value="10uF" x="38.1" y="20.32" rot="MR270"/>
+<element name="R4" library="resistor" package="R0603" value="" x="33.02" y="19.05" smashed="yes" rot="MR0">
 <attribute name="NAME" x="33.655" y="17.145" size="1.27" layer="26" rot="MR0"/>
 <attribute name="VALUE" x="33.655" y="17.145" size="1.27" layer="28" rot="MR0"/>
 </element>
-<element name="R5" library="resistor" library_urn="urn:adsk.eagle:library:348" package="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="" x="29.21" y="19.05" smashed="yes" rot="MR0">
+<element name="R5" library="resistor" package="R0603" value="" x="29.21" y="19.05" smashed="yes" rot="MR0">
 <attribute name="NAME" x="29.845" y="17.145" size="1.27" layer="26" rot="MR0"/>
 <attribute name="VALUE" x="29.845" y="17.145" size="1.27" layer="28" rot="MR0"/>
 </element>
-<element name="R6" library="resistor" library_urn="urn:adsk.eagle:library:348" package="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="" x="27.813" y="21.59" smashed="yes" rot="MR180">
+<element name="R6" library="resistor" package="R0603" value="" x="27.813" y="21.59" smashed="yes" rot="MR180">
 <attribute name="NAME" x="27.178" y="22.225" size="1.27" layer="26" rot="MR90"/>
 <attribute name="VALUE" x="27.178" y="23.495" size="1.27" layer="28" rot="MR180"/>
 </element>
-<element name="R7" library="resistor" library_urn="urn:adsk.eagle:library:348" package="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="" x="30.48" y="25.4" rot="MR180"/>
-<element name="LED1" library="led" library_urn="urn:adsk.eagle:library:259" package="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1" value="" x="11.43" y="8.89" smashed="yes">
+<element name="R7" library="resistor" package="R0603" value="" x="30.48" y="25.4" rot="MR180"/>
+<element name="LED1" library="led" package="SML0805" value="" x="11.43" y="8.89" smashed="yes">
 <attribute name="NAME" x="9.549" y="6.715" size="1.27" layer="25"/>
 <attribute name="VALUE" x="9.93" y="6.89" size="1.27" layer="27"/>
 </element>
-<element name="LED2" library="led" library_urn="urn:adsk.eagle:library:259" package="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1" value="" x="7.62" y="8.89" smashed="yes">
+<element name="LED2" library="led" package="SML0805" value="" x="7.62" y="8.89" smashed="yes">
 <attribute name="NAME" x="9.12" y="7.89" size="1.27" layer="25" rot="R180"/>
 <attribute name="VALUE" x="6.12" y="6.89" size="1.27" layer="27"/>
 </element>
-<element name="R8" library="resistor" library_urn="urn:adsk.eagle:library:348" package="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="" x="10.16" y="11.43" smashed="yes">
+<element name="R8" library="resistor" package="R0603" value="" x="10.16" y="11.43" smashed="yes">
 <attribute name="NAME" x="12.065" y="12.065" size="1.27" layer="25" rot="R270"/>
 <attribute name="VALUE" x="9.525" y="9.525" size="1.27" layer="27"/>
 </element>
-<element name="R9" library="resistor" library_urn="urn:adsk.eagle:library:348" package="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="" x="15.24" y="8.89" smashed="yes">
+<element name="R9" library="resistor" package="R0603" value="" x="15.24" y="8.89" smashed="yes">
 <attribute name="NAME" x="17.145" y="9.525" size="1.27" layer="25" rot="R270"/>
 <attribute name="VALUE" x="14.605" y="6.985" size="1.27" layer="27"/>
 </element>
@@ -2218,18 +2172,18 @@ design rules under a new name.</description>
 <element name="R10" library="adafruit" package="R0603" value="100k" x="29.21" y="13.97" smashed="yes" rot="R90">
 <attribute name="NAME" x="32.131" y="13.081" size="1.27" layer="25" rot="R90"/>
 </element>
-<element name="R11" library="resistor" library_urn="urn:adsk.eagle:library:348" package="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="" x="16.51" y="29.21" rot="R180"/>
+<element name="R11" library="resistor" package="R0603" value="" x="16.51" y="29.21" rot="R180"/>
 <element name="J1" library="SparkFun-Connectors" package="USB-MICROB" value="USB-MICROB" x="38.1" y="2.54">
 <attribute name="PROD_ID" value="CONN-09505" x="38.1" y="2.54" size="1.778" layer="27" display="off"/>
 </element>
-<element name="H1" library="holes" library_urn="urn:adsk.eagle:library:237" package="2,8" package3d_urn="urn:adsk.eagle:package:14271/1" value="MOUNT-HOLE2.8" x="38.1" y="46.99"/>
-<element name="H2" library="holes" library_urn="urn:adsk.eagle:library:237" package="2,8" package3d_urn="urn:adsk.eagle:package:14271/1" value="MOUNT-HOLE2.8" x="7.62" y="46.99"/>
+<element name="H1" library="holes" package="2,8" value="MOUNT-HOLE2.8" x="35.56" y="46.99"/>
+<element name="H2" library="holes" package="2,8" value="MOUNT-HOLE2.8" x="10.16" y="46.99"/>
 <element name="U1" library="smarttle" package="QFP50P1200X1200X160-64N" value="STM32F0_LQFP64" x="16.51" y="17.78" rot="MR270"/>
-<element name="R2" library="resistor" library_urn="urn:adsk.eagle:library:348" package="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="" x="7.747" y="20.193" rot="MR180"/>
-<element name="R3" library="resistor" library_urn="urn:adsk.eagle:library:348" package="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="" x="8.763" y="24.13" rot="MR90"/>
+<element name="R2" library="resistor" package="R0603" value="" x="7.747" y="20.193" rot="MR180"/>
+<element name="R3" library="resistor" package="R0603" value="" x="8.763" y="24.13" rot="MR90"/>
 <element name="C1" library="microbuilder" package="0805-NO" value="10nF" x="19.05" y="15.24" rot="R180"/>
 <element name="C3" library="microbuilder" package="0805-NO" value="10nF" x="15.24" y="25.4" rot="R180"/>
-<element name="JP2" library="pinhead" library_urn="urn:adsk.eagle:library:325" package="2X05" package3d_urn="urn:adsk.eagle:package:22470/2" value="" x="25.4" y="3.81" rot="R180"/>
+<element name="JP2" library="pinhead" package="2X05" value="" x="25.4" y="3.81" rot="R180"/>
 </elements>
 <signals>
 <signal name="USART_TX">
@@ -2423,18 +2377,24 @@ design rules under a new name.</description>
 <wire x1="1.27" y1="29.21" x2="1.27" y2="33.02" width="0.254" layer="1"/>
 <wire x1="1.27" y1="33.02" x2="2.54" y2="34.29" width="0.254" layer="1"/>
 <wire x1="2.54" y1="34.29" x2="3.81" y2="34.29" width="0.254" layer="1"/>
-<wire x1="40.64" y1="24.13" x2="35.56" y2="19.05" width="0.254" layer="1"/>
-<wire x1="35.56" y1="19.05" x2="35.56" y2="7.62" width="0.254" layer="1"/>
-<wire x1="40.64" y1="24.13" x2="41.91" y2="24.13" width="0.254" layer="16"/>
-<wire x1="41.91" y1="24.13" x2="43.18" y2="25.4" width="0.254" layer="16"/>
-<wire x1="43.18" y1="25.4" x2="43.18" y2="38.1" width="0.254" layer="16"/>
-<wire x1="43.18" y1="38.1" x2="41.91" y2="39.37" width="0.254" layer="16"/>
-<wire x1="27.94" y1="39.37" x2="26.67" y2="40.64" width="0.254" layer="16"/>
+<wire x1="35.56" y1="24.13" x2="35.56" y2="7.62" width="0.254" layer="1"/>
 <wire x1="26.67" y1="40.64" x2="8.89" y2="40.64" width="0.254" layer="16"/>
 <wire x1="8.89" y1="40.64" x2="6.35" y2="38.1" width="0.254" layer="16"/>
 <wire x1="6.35" y1="38.1" x2="6.35" y2="35.56" width="0.254" layer="16"/>
 <wire x1="6.35" y1="35.56" x2="3.81" y2="34.29" width="0.254" layer="16"/>
-<wire x1="41.91" y1="39.37" x2="27.94" y2="39.37" width="0.254" layer="16"/>
+<wire x1="44.45" y1="27.94" x2="44.45" y2="46.99" width="0.254" layer="16"/>
+<wire x1="44.45" y1="27.94" x2="41.91" y2="25.4" width="0.254" layer="16"/>
+<via x="41.91" y="25.4" extent="1-16" drill="0.6" shape="octagon"/>
+<wire x1="41.91" y1="25.4" x2="36.83" y2="25.4" width="0.254" layer="1"/>
+<wire x1="36.83" y1="25.4" x2="35.56" y2="24.13" width="0.254" layer="1"/>
+<wire x1="44.45" y1="46.99" x2="43.18" y2="48.26" width="0.254" layer="16"/>
+<wire x1="43.18" y1="48.26" x2="41.91" y2="48.26" width="0.254" layer="16"/>
+<wire x1="41.91" y1="48.26" x2="41.91" y2="49.53" width="0.254" layer="16"/>
+<wire x1="41.91" y1="49.53" x2="39.37" y2="52.07" width="0.254" layer="16"/>
+<wire x1="39.37" y1="52.07" x2="34.29" y2="52.07" width="0.254" layer="16"/>
+<wire x1="34.29" y1="52.07" x2="30.48" y2="48.26" width="0.254" layer="16"/>
+<wire x1="30.48" y1="48.26" x2="30.48" y2="44.45" width="0.254" layer="16"/>
+<wire x1="30.48" y1="44.45" x2="26.67" y2="40.64" width="0.254" layer="16"/>
 </signal>
 <signal name="ROW1">
 <contactref element="KEYPAD" pad="1"/>
@@ -2642,11 +2602,16 @@ design rules under a new name.</description>
 <wire x1="43.18" y1="1.4467125" x2="43.2286" y2="1.4953125" width="0.1524" layer="1"/>
 <wire x1="43.2286" y1="1.4953125" x2="43.2286" y2="3.5846875" width="0.1524" layer="1"/>
 <wire x1="43.2286" y1="3.5846875" x2="43.18" y2="3.6332875" width="0.1524" layer="1"/>
-<wire x1="43.18" y1="3.6332875" x2="43.18" y2="31.75" width="0.1524" layer="1"/>
-<wire x1="43.18" y1="31.75" x2="41.91" y2="33.02" width="0.1524" layer="1"/>
-<wire x1="41.91" y1="33.02" x2="30.48" y2="33.02" width="0.1524" layer="1"/>
 <wire x1="30.48" y1="33.02" x2="26.67" y2="29.21" width="0.1524" layer="1"/>
 <wire x1="26.67" y1="29.21" x2="19.05" y2="29.21" width="0.1524" layer="1"/>
+<via x="30.48" y="33.02" extent="1-16" drill="0.6" shape="octagon"/>
+<wire x1="30.48" y1="33.02" x2="35.56" y2="33.02" width="0.1524" layer="16"/>
+<wire x1="35.56" y1="33.02" x2="39.37" y2="29.21" width="0.1524" layer="16"/>
+<wire x1="39.37" y1="29.21" x2="39.37" y2="24.13" width="0.1524" layer="16"/>
+<wire x1="39.37" y1="24.13" x2="44.45" y2="19.05" width="0.1524" layer="16"/>
+<via x="44.45" y="19.05" extent="1-16" drill="0.6" shape="octagon"/>
+<wire x1="44.45" y1="19.05" x2="44.45" y2="4.9032875" width="0.1524" layer="1"/>
+<wire x1="44.45" y1="4.9032875" x2="43.18" y2="3.6332875" width="0.1524" layer="1"/>
 </signal>
 <signal name="DAC">
 <contactref element="R6" pad="1"/>
@@ -2666,11 +2631,13 @@ design rules under a new name.</description>
 <wire x1="24.765" y1="18.415" x2="25.4" y2="17.78" width="0.1524" layer="16"/>
 <wire x1="24.765" y1="18.415" x2="23.65" y2="19.53" width="0.1524" layer="16"/>
 <wire x1="23.65" y1="19.53" x2="22.18" y2="19.53" width="0.1524" layer="16"/>
-<wire x1="40.64" y1="31.75" x2="31.75" y2="31.75" width="0.1524" layer="1"/>
-<wire x1="31.75" y1="31.75" x2="25.4" y2="25.4" width="0.1524" layer="1"/>
 <wire x1="25.4" y1="25.4" x2="25.4" y2="19.05" width="0.1524" layer="1"/>
 <via x="25.4" y="19.05" extent="1-16" drill="0.35"/>
 <wire x1="25.4" y1="19.05" x2="24.765" y2="18.415" width="0.1524" layer="16"/>
+<wire x1="25.4" y1="25.4" x2="37.65570625" y2="37.288034375" width="0.1524" layer="1"/>
+<wire x1="37.65570625" y1="37.288034375" x2="38.1" y2="37.719" width="0.1524" layer="1"/>
+<wire x1="41.91" y1="40.64" x2="41.007671875" y2="40.64" width="0.1524" layer="1"/>
+<wire x1="41.007671875" y1="40.64" x2="37.65570625" y2="37.288034375" width="0.1524" layer="1"/>
 </signal>
 <signal name="MISO">
 <contactref element="U1" pad="22"/>
@@ -2680,18 +2647,20 @@ design rules under a new name.</description>
 <contactref element="U1" pad="23"/>
 <contactref element="JP2" pad="7"/>
 <wire x1="22.86" y1="5.08" x2="24.638" y2="6.858" width="0.1524" layer="16"/>
-<wire x1="24.638" y1="15.24" x2="24.638" y2="6.858" width="0.1524" layer="16"/>
-<wire x1="24.638" y1="15.24" x2="24.638" y2="15.621" width="0.1524" layer="16"/>
+<wire x1="24.638" y1="17.272" x2="24.638" y2="6.858" width="0.1524" layer="16"/>
 <wire x1="22.18" y1="18.53" x2="23.38" y2="18.53" width="0.1524" layer="16"/>
-<wire x1="24.638" y1="17.272" x2="24.638" y2="15.24" width="0.1524" layer="16"/>
 <wire x1="23.38" y1="18.53" x2="24.13" y2="17.78" width="0.1524" layer="16"/>
 <wire x1="24.13" y1="17.78" x2="24.638" y2="17.272" width="0.1524" layer="16"/>
-<wire x1="40.64" y1="29.21" x2="30.48" y2="29.21" width="0.1524" layer="1"/>
-<wire x1="30.48" y1="29.21" x2="26.67" y2="25.4" width="0.1524" layer="1"/>
+<wire x1="31.75" y1="30.48" x2="26.67" y2="25.4" width="0.1524" layer="1"/>
 <wire x1="26.67" y1="25.4" x2="26.67" y2="19.05" width="0.1524" layer="1"/>
 <wire x1="26.67" y1="19.05" x2="25.4" y2="17.78" width="0.1524" layer="1"/>
 <wire x1="25.4" y1="17.78" x2="24.13" y2="17.78" width="0.1524" layer="1"/>
 <via x="24.13" y="17.78" extent="1-16" drill="0.35"/>
+<wire x1="38.1" y1="35.56" x2="33.02" y2="30.48" width="0.1524" layer="1"/>
+<wire x1="33.02" y1="30.48" x2="31.75" y2="30.48" width="0.1524" layer="1"/>
+<via x="38.1" y="35.56" extent="1-16" drill="0.6" shape="octagon"/>
+<wire x1="38.1" y1="35.56" x2="38.1" y2="39.37" width="0.1524" layer="16"/>
+<wire x1="38.1" y1="39.37" x2="41.91" y2="43.18" width="0.1524" layer="16"/>
 </signal>
 <signal name="USART_RX">
 <contactref element="ESP8266" pad="8"/>
@@ -2791,21 +2760,4 @@ design rules under a new name.</description>
 </signals>
 </board>
 </drawing>
-<compatibility>
-<note version="8.2" severity="warning">
-Since Version 8.2, EAGLE supports online libraries. The ids
-of those online libraries will not be understood (or retained)
-with this version.
-</note>
-<note version="8.3" severity="warning">
-Since Version 8.3, EAGLE supports URNs for individual library
-assets (packages, symbols, and devices). The URNs of those assets
-will not be understood (or retained) with this version.
-</note>
-<note version="8.3" severity="warning">
-Since Version 8.3, EAGLE supports the association of 3D packages
-with devices in libraries, schematics, and board files. Those 3D
-packages will not be understood (or retained) with this version.
-</note>
-</compatibility>
 </eagle>
