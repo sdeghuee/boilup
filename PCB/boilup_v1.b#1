@@ -2112,7 +2112,7 @@ design rules under a new name.</description>
 <attribute name="NAME" x="8.7122" y="5.9182" size="1.27" layer="25" ratio="10" rot="R180"/>
 <attribute name="VALUE" x="18.796" y="5.842" size="1.27" layer="27" rot="R180"/>
 </element>
-<element name="LCD" library="pinhead" package="1X06" value="" x="41.91" y="36.83" rot="R270"/>
+<element name="LCD" library="pinhead" package="1X06" value="" x="41.91" y="41.91" rot="R90"/>
 <element name="MOT" library="pinhead" package="1X02" value="" x="3.81" y="26.67" smashed="yes" rot="R270">
 <attribute name="NAME" x="1.9812" y="25.3238" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="0.635" y="29.21" size="1.27" layer="27" rot="R270"/>
@@ -2176,8 +2176,8 @@ design rules under a new name.</description>
 <element name="J1" library="SparkFun-Connectors" package="USB-MICROB" value="USB-MICROB" x="38.1" y="2.54">
 <attribute name="PROD_ID" value="CONN-09505" x="38.1" y="2.54" size="1.778" layer="27" display="off"/>
 </element>
-<element name="H1" library="holes" package="2,8" value="MOUNT-HOLE2.8" x="38.1" y="46.99"/>
-<element name="H2" library="holes" package="2,8" value="MOUNT-HOLE2.8" x="7.62" y="46.99"/>
+<element name="H1" library="holes" package="2,8" value="MOUNT-HOLE2.8" x="35.56" y="46.99"/>
+<element name="H2" library="holes" package="2,8" value="MOUNT-HOLE2.8" x="10.16" y="46.99"/>
 <element name="U1" library="smarttle" package="QFP50P1200X1200X160-64N" value="STM32F0_LQFP64" x="16.51" y="17.78" rot="MR270"/>
 <element name="R2" library="resistor" package="R0603" value="" x="7.747" y="20.193" rot="MR180"/>
 <element name="R3" library="resistor" package="R0603" value="" x="8.763" y="24.13" rot="MR90"/>
@@ -2378,17 +2378,23 @@ design rules under a new name.</description>
 <wire x1="1.27" y1="33.02" x2="2.54" y2="34.29" width="0.254" layer="1"/>
 <wire x1="2.54" y1="34.29" x2="3.81" y2="34.29" width="0.254" layer="1"/>
 <wire x1="35.56" y1="24.13" x2="35.56" y2="7.62" width="0.254" layer="1"/>
-<wire x1="27.94" y1="39.37" x2="26.67" y2="40.64" width="0.254" layer="16"/>
 <wire x1="26.67" y1="40.64" x2="8.89" y2="40.64" width="0.254" layer="16"/>
 <wire x1="8.89" y1="40.64" x2="6.35" y2="38.1" width="0.254" layer="16"/>
 <wire x1="6.35" y1="38.1" x2="6.35" y2="35.56" width="0.254" layer="16"/>
 <wire x1="6.35" y1="35.56" x2="3.81" y2="34.29" width="0.254" layer="16"/>
-<wire x1="43.18" y1="39.37" x2="27.94" y2="39.37" width="0.254" layer="16"/>
-<wire x1="35.56" y1="24.13" x2="41.91" y2="30.48" width="0.254" layer="1"/>
-<wire x1="41.91" y1="30.48" x2="43.18" y2="30.48" width="0.254" layer="16"/>
-<wire x1="43.18" y1="30.48" x2="44.45" y2="31.75" width="0.254" layer="16"/>
-<wire x1="44.45" y1="31.75" x2="44.45" y2="38.1" width="0.254" layer="16"/>
-<wire x1="44.45" y1="38.1" x2="43.18" y2="39.37" width="0.254" layer="16"/>
+<wire x1="44.45" y1="27.94" x2="44.45" y2="46.99" width="0.254" layer="16"/>
+<wire x1="44.45" y1="27.94" x2="41.91" y2="25.4" width="0.254" layer="16"/>
+<via x="41.91" y="25.4" extent="1-16" drill="0.6" shape="octagon"/>
+<wire x1="41.91" y1="25.4" x2="36.83" y2="25.4" width="0.254" layer="1"/>
+<wire x1="36.83" y1="25.4" x2="35.56" y2="24.13" width="0.254" layer="1"/>
+<wire x1="44.45" y1="46.99" x2="43.18" y2="48.26" width="0.254" layer="16"/>
+<wire x1="43.18" y1="48.26" x2="41.91" y2="48.26" width="0.254" layer="16"/>
+<wire x1="41.91" y1="48.26" x2="41.91" y2="49.53" width="0.254" layer="16"/>
+<wire x1="41.91" y1="49.53" x2="39.37" y2="52.07" width="0.254" layer="16"/>
+<wire x1="39.37" y1="52.07" x2="34.29" y2="52.07" width="0.254" layer="16"/>
+<wire x1="34.29" y1="52.07" x2="30.48" y2="48.26" width="0.254" layer="16"/>
+<wire x1="30.48" y1="48.26" x2="30.48" y2="44.45" width="0.254" layer="16"/>
+<wire x1="30.48" y1="44.45" x2="26.67" y2="40.64" width="0.254" layer="16"/>
 </signal>
 <signal name="ROW1">
 <contactref element="KEYPAD" pad="1"/>
@@ -2628,8 +2634,10 @@ design rules under a new name.</description>
 <wire x1="25.4" y1="25.4" x2="25.4" y2="19.05" width="0.1524" layer="1"/>
 <via x="25.4" y="19.05" extent="1-16" drill="0.35"/>
 <wire x1="25.4" y1="19.05" x2="24.765" y2="18.415" width="0.1524" layer="16"/>
-<wire x1="25.4" y1="25.4" x2="38.1" y2="38.1" width="0.1524" layer="1"/>
-<wire x1="38.1" y1="38.1" x2="41.91" y2="38.1" width="0.1524" layer="1"/>
+<wire x1="25.4" y1="25.4" x2="37.65570625" y2="37.288034375" width="0.1524" layer="1"/>
+<wire x1="37.65570625" y1="37.288034375" x2="38.1" y2="37.719" width="0.1524" layer="1"/>
+<wire x1="41.91" y1="40.64" x2="41.007671875" y2="40.64" width="0.1524" layer="1"/>
+<wire x1="41.007671875" y1="40.64" x2="37.65570625" y2="37.288034375" width="0.1524" layer="1"/>
 </signal>
 <signal name="MISO">
 <contactref element="U1" pad="22"/>
@@ -2648,9 +2656,11 @@ design rules under a new name.</description>
 <wire x1="26.67" y1="19.05" x2="25.4" y2="17.78" width="0.1524" layer="1"/>
 <wire x1="25.4" y1="17.78" x2="24.13" y2="17.78" width="0.1524" layer="1"/>
 <via x="24.13" y="17.78" extent="1-16" drill="0.35"/>
-<wire x1="41.91" y1="35.56" x2="38.1" y2="35.56" width="0.1524" layer="1"/>
 <wire x1="38.1" y1="35.56" x2="33.02" y2="30.48" width="0.1524" layer="1"/>
 <wire x1="33.02" y1="30.48" x2="31.75" y2="30.48" width="0.1524" layer="1"/>
+<via x="38.1" y="35.56" extent="1-16" drill="0.6" shape="octagon"/>
+<wire x1="38.1" y1="35.56" x2="38.1" y2="39.37" width="0.1524" layer="16"/>
+<wire x1="38.1" y1="39.37" x2="41.91" y2="43.18" width="0.1524" layer="16"/>
 </signal>
 <signal name="USART_RX">
 <contactref element="ESP8266" pad="8"/>
