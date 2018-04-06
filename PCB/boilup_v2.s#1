@@ -19444,7 +19444,7 @@ type 0309, grid 2.5 mm</description>
 <part name="D1" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="DIODE-" device="DO-214AC" package3d_urn="urn:adsk.eagle:package:43416/2"/>
 <part name="GND4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="C2" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C1210K" package3d_urn="urn:adsk.eagle:package:26204/1" value="100uF"/>
+<part name="C2" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-US" device="C1210K" package3d_urn="urn:adsk.eagle:package:26204/1" value="10uF"/>
 <part name="GND6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND7" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="R7" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="10"/>
@@ -19476,7 +19476,7 @@ type 0309, grid 2.5 mm</description>
 <part name="C1" library="microbuilder" deviceset="CAP_CERAMIC" device="0805-NOOUTLINE" value="10nF"/>
 <part name="C3" library="microbuilder" deviceset="CAP_CERAMIC" device="0805-NOOUTLINE" value="10nF"/>
 <part name="REDUDNAT" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-2X5" device="" package3d_urn="urn:adsk.eagle:package:22470/2"/>
-<part name="LED3" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1"/>
+<part name="BUTTON" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1"/>
 <part name="R12" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:26057/1"/>
 <part name="U$3" library="smarttle" deviceset="TPSM842" device=""/>
 <part name="GND11" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -19499,9 +19499,9 @@ type 0309, grid 2.5 mm</description>
 <part name="R15" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:26057/1" value="10"/>
 <part name="C11" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="C-EU" device="C0603K" package3d_urn="urn:adsk.eagle:package:26200/1" value="0.05uF"/>
 <part name="GND12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="LED4" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1"/>
+<part name="5V" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1"/>
 <part name="R4" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:26057/1"/>
-<part name="LED5" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1"/>
+<part name="3V3" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1"/>
 <part name="R5" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:26057/1"/>
 </parts>
 <sheets>
@@ -19530,6 +19530,11 @@ PA13| SWDIO
 PA14| SWCLK</text>
 <text x="170.18" y="187.96" size="1.778" layer="97">5V @ .2A</text>
 <text x="167.64" y="53.34" size="1.778" layer="97">Voltage Reg</text>
+<text x="20.32" y="116.84" size="1.778" layer="97">MicroController Power and Config</text>
+<text x="251.46" y="162.56" size="1.778" layer="97">Power Conversion</text>
+<text x="233.68" y="116.84" size="1.778" layer="97">Speaker Driver</text>
+<text x="30.48" y="71.12" size="1.778" layer="97">Micro controlled LEDs</text>
+<text x="254" y="111.76" size="1.778" layer="97">Power Selection speaker Driver</text>
 </plain>
 <instances>
 <instance part="U$1" gate="G$1" x="96.52" y="58.42"/>
@@ -19589,7 +19594,7 @@ PA14| SWCLK</text>
 <instance part="C1" gate="G$1" x="55.88" y="93.98"/>
 <instance part="C3" gate="G$1" x="63.5" y="93.98"/>
 <instance part="REDUDNAT" gate="A" x="210.82" y="236.22"/>
-<instance part="LED3" gate="G$1" x="71.12" y="40.64"/>
+<instance part="BUTTON" gate="G$1" x="71.12" y="40.64"/>
 <instance part="R12" gate="G$1" x="71.12" y="48.26" rot="R90"/>
 <instance part="U$3" gate="G$1" x="261.62" y="154.94"/>
 <instance part="GND11" gate="1" x="261.62" y="137.16"/>
@@ -19599,10 +19604,10 @@ PA14| SWCLK</text>
 <instance part="JP1" gate="G$1" x="226.06" y="154.94" rot="R180"/>
 <instance part="P+1" gate="1" x="149.86" y="198.12"/>
 <instance part="H3" gate="G$1" x="287.02" y="233.68"/>
-<instance part="R13" gate="G$1" x="162.56" y="111.76"/>
-<instance part="R14" gate="G$1" x="177.8" y="111.76"/>
-<instance part="P+3" gate="1" x="154.94" y="114.3"/>
-<instance part="P+5" gate="1" x="185.42" y="114.3"/>
+<instance part="R13" gate="G$1" x="264.16" y="104.14"/>
+<instance part="R14" gate="G$1" x="279.4" y="104.14"/>
+<instance part="P+3" gate="1" x="256.54" y="106.68"/>
+<instance part="P+5" gate="1" x="287.02" y="106.68"/>
 <instance part="U$4" gate="G$1" x="231.14" y="86.36"/>
 <instance part="C9" gate="G$1" x="248.92" y="73.66"/>
 <instance part="GND3" gate="1" x="248.92" y="50.8"/>
@@ -19612,9 +19617,9 @@ PA14| SWCLK</text>
 <instance part="R15" gate="G$1" x="226.06" y="106.68"/>
 <instance part="C11" gate="G$1" x="248.92" y="88.9" rot="R90"/>
 <instance part="GND12" gate="1" x="256.54" y="86.36"/>
-<instance part="LED4" gate="G$1" x="137.16" y="30.48"/>
+<instance part="5V" gate="G$1" x="137.16" y="30.48"/>
 <instance part="R4" gate="G$1" x="137.16" y="40.64" rot="R90"/>
-<instance part="LED5" gate="G$1" x="205.74" y="33.02"/>
+<instance part="3V3" gate="G$1" x="205.74" y="33.02"/>
 <instance part="R5" gate="G$1" x="205.74" y="43.18" rot="R90"/>
 </instances>
 <busses>
@@ -19662,7 +19667,7 @@ PA14| SWCLK</text>
 <pinref part="GND2" gate="1" pin="GND"/>
 <pinref part="R1" gate="G$1" pin="1"/>
 <wire x1="81.28" y1="33.02" x2="81.28" y2="38.1" width="0.1524" layer="91"/>
-<pinref part="LED3" gate="G$1" pin="C"/>
+<pinref part="BUTTON" gate="G$1" pin="C"/>
 <wire x1="71.12" y1="35.56" x2="81.28" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="35.56" x2="81.28" y2="33.02" width="0.1524" layer="91"/>
 <junction x="81.28" y="33.02"/>
@@ -19705,7 +19710,7 @@ PA14| SWCLK</text>
 <pinref part="C7" gate="G$1" pin="2"/>
 <pinref part="U$28" gate="G$1" pin="GND"/>
 <wire x1="195.58" y1="30.48" x2="195.58" y2="27.94" width="0.1524" layer="91"/>
-<pinref part="LED5" gate="G$1" pin="C"/>
+<pinref part="3V3" gate="G$1" pin="C"/>
 <wire x1="205.74" y1="27.94" x2="195.58" y2="27.94" width="0.1524" layer="91"/>
 <junction x="195.58" y="27.94"/>
 </segment>
@@ -19713,7 +19718,7 @@ PA14| SWCLK</text>
 <pinref part="C6" gate="G$1" pin="2"/>
 <pinref part="U$27" gate="G$1" pin="GND"/>
 <wire x1="149.86" y1="30.48" x2="149.86" y2="25.4" width="0.1524" layer="91"/>
-<pinref part="LED4" gate="G$1" pin="C"/>
+<pinref part="5V" gate="G$1" pin="C"/>
 <wire x1="149.86" y1="25.4" x2="137.16" y2="25.4" width="0.1524" layer="91"/>
 <junction x="149.86" y="25.4"/>
 </segment>
@@ -19923,7 +19928,7 @@ PA14| SWCLK</text>
 <segment>
 <pinref part="R14" gate="G$1" pin="2"/>
 <pinref part="P+5" gate="1" pin="+5V"/>
-<wire x1="182.88" y1="111.76" x2="185.42" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="284.48" y1="104.14" x2="287.02" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="ROW1" class="0">
@@ -20282,7 +20287,7 @@ PA14| SWCLK</text>
 </net>
 <net name="N$5" class="0">
 <segment>
-<pinref part="LED3" gate="G$1" pin="A"/>
+<pinref part="BUTTON" gate="G$1" pin="A"/>
 <pinref part="R12" gate="G$1" pin="1"/>
 </segment>
 </net>
@@ -20309,14 +20314,14 @@ PA14| SWCLK</text>
 <segment>
 <pinref part="R13" gate="G$1" pin="1"/>
 <pinref part="P+3" gate="1" pin="+12V"/>
-<wire x1="157.48" y1="111.76" x2="154.94" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="259.08" y1="104.14" x2="256.54" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="OPAMPSUPPLY" class="0">
 <segment>
 <pinref part="R13" gate="G$1" pin="2"/>
 <pinref part="R14" gate="G$1" pin="1"/>
-<wire x1="167.64" y1="111.76" x2="172.72" y2="111.76" width="0.1524" layer="91"/>
+<wire x1="269.24" y1="104.14" x2="274.32" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U$4" gate="G$1" pin="VS"/>
@@ -20380,14 +20385,14 @@ PA14| SWCLK</text>
 </net>
 <net name="N$7" class="0">
 <segment>
-<pinref part="LED4" gate="G$1" pin="A"/>
+<pinref part="5V" gate="G$1" pin="A"/>
 <pinref part="R4" gate="G$1" pin="1"/>
 <wire x1="137.16" y1="35.56" x2="137.16" y2="33.02" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$14" class="0">
 <segment>
-<pinref part="LED5" gate="G$1" pin="A"/>
+<pinref part="3V3" gate="G$1" pin="A"/>
 <pinref part="R5" gate="G$1" pin="1"/>
 <wire x1="205.74" y1="38.1" x2="205.74" y2="35.56" width="0.1524" layer="91"/>
 </segment>
