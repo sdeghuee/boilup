@@ -2854,43 +2854,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="41.91" y1="21.59" x2="43.18" y2="22.86" width="0.2032" layer="1"/>
 <wire x1="43.18" y1="22.86" x2="43.18" y2="24.13" width="0.2032" layer="1"/>
 </signal>
-<signal name="SCK">
-<contactref element="U1" pad="21"/>
-<contactref element="LCD" pad="3"/>
-<wire x1="24.92" y1="10.84" x2="24.92" y2="9.5248" width="0.2032" layer="1"/>
-<wire x1="24.92" y1="9.5248" x2="24.892" y2="9.4968" width="0.2032" layer="1"/>
-<via x="24.892" y="9.4968" extent="1-16" drill="0.35"/>
-<wire x1="24.892" y1="9.4968" x2="27.3544" y2="7.0344" width="0.2032" layer="16"/>
-<wire x1="27.3544" y1="7.0344" x2="28.0388" y2="6.35" width="0.2032" layer="16"/>
-<wire x1="28.0388" y1="6.35" x2="36.83" y2="6.35" width="0.2032" layer="16"/>
-<via x="36.83" y="6.35" extent="1-16" drill="0.35"/>
-<wire x1="36.83" y1="6.35" x2="36.83" y2="2.54" width="0.2032" layer="1"/>
-<via x="19.558" y="6.858" extent="1-16" drill="0.35"/>
-<wire x1="20.0152" y1="7.3152" x2="19.558" y2="6.858" width="0.1524" layer="16"/>
-<wire x1="22.86" y1="13.4503875" x2="20.0152" y2="10.6055875" width="0.1524" layer="16"/>
-<wire x1="20.0152" y1="10.6055875" x2="20.0152" y2="7.3152" width="0.1524" layer="16"/>
-<wire x1="19.558" y1="6.858" x2="27.178" y2="6.858" width="0.1524" layer="1"/>
-<wire x1="27.178" y1="6.858" x2="27.3544" y2="7.0344" width="0.1524" layer="1"/>
-<via x="27.3544" y="7.0344" extent="1-16" drill="0.35"/>
-</signal>
-<signal name="MISO">
-<contactref element="U1" pad="22"/>
-</signal>
-<signal name="MOSI">
-<contactref element="U1" pad="23"/>
-<contactref element="LCD" pad="4"/>
-<wire x1="25.92" y1="10.84" x2="25.92" y2="9.7388" width="0.2032" layer="1"/>
-<wire x1="25.92" y1="9.7388" x2="26.162" y2="9.4968" width="0.2032" layer="1"/>
-<via x="26.162" y="9.4968" extent="1-16" drill="0.35"/>
-<wire x1="26.162" y1="9.4968" x2="28.0388" y2="7.62" width="0.2032" layer="16"/>
-<wire x1="28.0388" y1="7.62" x2="39.37" y2="7.62" width="0.2032" layer="16"/>
-<via x="39.37" y="7.62" extent="1-16" drill="0.35"/>
-<wire x1="39.37" y1="7.62" x2="39.37" y2="2.54" width="0.2032" layer="1"/>
-<wire x1="25.4" y1="12.6052" x2="25.908" y2="12.0972" width="0.1524" layer="16"/>
-<via x="25.908" y="12.0972" extent="1-16" drill="0.35"/>
-<wire x1="25.908" y1="12.0972" x2="25.92" y2="12.0852" width="0.1524" layer="1"/>
-<wire x1="25.92" y1="12.0852" x2="25.92" y2="10.84" width="0.1524" layer="1"/>
-</signal>
 <signal name="USART_RX">
 <contactref element="U1" pad="43"/>
 <contactref element="ESP8266" pad="8"/>
@@ -2906,16 +2869,13 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <signal name="LED4">
 <contactref element="U1" pad="40"/>
 <contactref element="R8" pad="2"/>
-<wire x1="32.34" y1="16.26" x2="37" y2="16.26" width="0.1524" layer="1"/>
+<wire x1="32.34" y1="16.26" x2="37" y2="16.26" width="0" layer="19" extent="1-16"/>
 <wire x1="37" y1="16.26" x2="37.25" y2="16.51" width="0.1524" layer="1"/>
 </signal>
 <signal name="LED3">
 <contactref element="U1" pad="39"/>
 <contactref element="R9" pad="2"/>
-<wire x1="36.4" y1="13.55" x2="36.405" y2="13.545" width="0.1524" layer="1"/>
-<wire x1="36.405" y1="13.545" x2="37.25" y2="12.7" width="0.1524" layer="1"/>
-<wire x1="36.4" y1="13.55" x2="34.19" y2="15.76" width="0.1524" layer="1"/>
-<wire x1="34.19" y1="15.76" x2="32.34" y2="15.76" width="0.1524" layer="1"/>
+<wire x1="32.34" y1="15.76" x2="37.25" y2="12.7" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$1">
 <contactref element="LED2" pad="A"/>
@@ -3080,9 +3040,13 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 </signal>
 <signal name="SCL">
 <contactref element="U$5" pad="1"/>
+<contactref element="LCD" pad="3"/>
+<wire x1="-12.065" y1="-1.06" x2="36.83" y2="2.54" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="SDA">
 <contactref element="U$5" pad="4"/>
+<contactref element="LCD" pad="4"/>
+<wire x1="-8.255" y1="-1.06" x2="39.37" y2="2.54" width="0" layer="19" extent="1-1"/>
 </signal>
 </signals>
 </board>

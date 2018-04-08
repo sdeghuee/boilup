@@ -2834,8 +2834,8 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <signal name="DAC">
 <contactref element="U1" pad="20"/>
 <contactref element="REDUNDANT" pad="3"/>
-<wire x1="54.61" y1="13.97" x2="53.34" y2="15.24" width="0.1524" layer="1"/>
-<wire x1="53.34" y1="15.24" x2="53.34" y2="22.86" width="0.1524" layer="1"/>
+<wire x1="54.61" y1="13.97" x2="53.34" y2="15.24" width="0.2032" layer="1"/>
+<wire x1="53.34" y1="15.24" x2="53.34" y2="22.86" width="0.2032" layer="1"/>
 <wire x1="53.34" y1="22.86" x2="52.07" y2="24.13" width="0.2032" layer="1"/>
 <wire x1="52.07" y1="24.13" x2="43.18" y2="24.13" width="0.2032" layer="1"/>
 <wire x1="43.18" y1="24.13" x2="39.37" y2="24.13" width="0.2032" layer="1"/>
@@ -3052,10 +3052,9 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <contactref element="U$5" pad="8"/>
 <contactref element="REDUNDANT" pad="7"/>
 <via x="34.925" y="20.526" extent="1-16" drill="0.35"/>
-<wire x1="32.34" y1="19.76" x2="32.461" y2="19.881" width="0.2032" layer="1"/>
-<wire x1="32.461" y1="19.881" x2="33.16190625" y2="19.881" width="0.2032" layer="1"/>
 <wire x1="33.80690625" y1="20.526" x2="34.925" y2="20.526" width="0.2032" layer="1"/>
-<wire x1="33.16190625" y1="19.881" x2="33.80690625" y2="20.526" width="0.2032" layer="1"/>
+<wire x1="33.16190625" y1="19.881" x2="33.310453125" y2="20.029546875" width="0.2032" layer="1"/>
+<wire x1="33.310453125" y1="20.029546875" x2="33.80690625" y2="20.526" width="0.2032" layer="1"/>
 <wire x1="34.925" y1="20.526" x2="37.894" y2="20.526" width="0.2032" layer="16"/>
 <wire x1="37.894" y1="20.526" x2="39.37" y2="19.05" width="0.2032" layer="16"/>
 <via x="39.37" y="19.05" extent="1-16" drill="0.35"/>
@@ -3070,6 +3069,8 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="45.593" y1="19.05" x2="44.831" y2="19.812" width="0.2032" layer="1"/>
 <wire x1="44.831" y1="19.812" x2="40.132" y2="19.812" width="0.2032" layer="1"/>
 <wire x1="40.132" y1="19.812" x2="39.37" y2="19.05" width="0.2032" layer="1"/>
+<wire x1="32.34" y1="19.76" x2="33.04090625" y2="19.76" width="0.2032" layer="1"/>
+<wire x1="33.04090625" y1="19.76" x2="33.16190625" y2="19.881" width="0.2032" layer="1"/>
 </signal>
 <signal name="SCL">
 <contactref element="U$5" pad="1"/>
