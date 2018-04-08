@@ -345,6 +345,35 @@ Source: http://focus.ti.com/lit/ds/symlink/ths4211.pdf</description>
 <rectangle x1="-0.85" y1="-0.875" x2="0.85" y2="0.875" layer="29"/>
 <rectangle x1="-0.825" y1="-0.85" x2="0.825" y2="0.85" layer="31"/>
 </package>
+<package name="SOP-08">
+<description>&lt;b&gt;PS (R-PDSO-G8)&lt;/b&gt;&lt;p&gt;
+Source: http://focus.ti.com .. sn65176b.pdf</description>
+<wire x1="3.15" y1="2.7" x2="3.15" y2="-2.2" width="0.2032" layer="21"/>
+<wire x1="3.15" y1="-2.2" x2="3.15" y2="-2.7" width="0.2032" layer="21"/>
+<wire x1="3.15" y1="-2.7" x2="-3.15" y2="-2.7" width="0.2032" layer="51"/>
+<wire x1="-3.15" y1="-2.7" x2="-3.15" y2="-2.2" width="0.2032" layer="21"/>
+<wire x1="-3.15" y1="-2.2" x2="-3.15" y2="2.7" width="0.2032" layer="21"/>
+<wire x1="-3.15" y1="2.7" x2="3.15" y2="2.7" width="0.2032" layer="51"/>
+<wire x1="3.15" y1="-2.2" x2="-3.15" y2="-2.2" width="0.2032" layer="21"/>
+<smd name="2" x="-0.635" y="-3.6" dx="0.6" dy="2.2" layer="1"/>
+<smd name="7" x="-0.635" y="3.575" dx="0.6" dy="2.2" layer="1"/>
+<smd name="1" x="-1.905" y="-3.6" dx="0.6" dy="2.2" layer="1"/>
+<smd name="3" x="0.635" y="-3.6" dx="0.6" dy="2.2" layer="1"/>
+<smd name="4" x="1.905" y="-3.6" dx="0.6" dy="2.2" layer="1"/>
+<smd name="8" x="-1.905" y="3.575" dx="0.6" dy="2.2" layer="1"/>
+<smd name="6" x="0.635" y="3.575" dx="0.6" dy="2.2" layer="1"/>
+<smd name="5" x="1.905" y="3.575" dx="0.6" dy="2.2" layer="1"/>
+<text x="-3.81" y="-2.54" size="1.27" layer="25" rot="R90">&gt;NAME</text>
+<text x="5.08" y="-2.54" size="1.27" layer="27" rot="R90">&gt;VALUE</text>
+<rectangle x1="-2.15" y1="-4.1" x2="-1.66" y2="-2.725" layer="51"/>
+<rectangle x1="-0.88" y1="-4.1" x2="-0.39" y2="-2.725" layer="51"/>
+<rectangle x1="0.39" y1="-4.1" x2="0.88" y2="-2.75" layer="51"/>
+<rectangle x1="1.66" y1="-4.1" x2="2.15" y2="-2.725" layer="51"/>
+<rectangle x1="1.66" y1="2.7" x2="2.15" y2="4.075" layer="51"/>
+<rectangle x1="0.39" y1="2.725" x2="0.88" y2="4.075" layer="51"/>
+<rectangle x1="-0.88" y1="2.725" x2="-0.39" y2="4.075" layer="51"/>
+<rectangle x1="-2.15" y1="2.725" x2="-1.66" y2="4.075" layer="51"/>
+</package>
 </packages>
 <symbols>
 <symbol name="NMOS-FET-E">
@@ -505,6 +534,21 @@ Source: http://focus.ti.com/lit/ds/symlink/ths4211.pdf</description>
 <text x="-7.62" y="10.16" size="1.778" layer="95">&gt;NAME</text>
 <pin name="GAIN2" x="12.7" y="7.62" length="middle" rot="R180"/>
 </symbol>
+<symbol name="TXS0102">
+<pin name="VCCA" x="-12.7" y="7.62" length="middle"/>
+<pin name="A1" x="-12.7" y="2.54" length="middle"/>
+<pin name="B1" x="-12.7" y="-2.54" length="middle"/>
+<pin name="OE" x="-12.7" y="-7.62" length="middle"/>
+<pin name="GND" x="12.7" y="-7.62" length="middle" rot="R180"/>
+<pin name="B2" x="12.7" y="-2.54" length="middle" rot="R180"/>
+<pin name="A2" x="12.7" y="2.54" length="middle" rot="R180"/>
+<pin name="VCCB" x="12.7" y="7.62" length="middle" rot="R180"/>
+<wire x1="-7.62" y1="-10.16" x2="7.62" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="7.62" y1="-10.16" x2="7.62" y2="10.16" width="0.254" layer="94"/>
+<wire x1="7.62" y1="10.16" x2="-7.62" y2="10.16" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="10.16" x2="-7.62" y2="-10.16" width="0.254" layer="94"/>
+<text x="-7.62" y="10.16" size="1.27" layer="95">&gt;NAME</text>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="STD20NF06L">
@@ -636,6 +680,28 @@ Source: http://focus.ti.com/lit/ds/symlink/ths4211.pdf</description>
 <connect gate="G$1" pin="GND" pad="4"/>
 <connect gate="G$1" pin="VOUT" pad="5"/>
 <connect gate="G$1" pin="VS" pad="6"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="TXS0102">
+<gates>
+<gate name="G$1" symbol="TXS0102" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SOP-08">
+<connects>
+<connect gate="G$1" pin="A1" pad="5"/>
+<connect gate="G$1" pin="A2" pad="4"/>
+<connect gate="G$1" pin="B1" pad="8"/>
+<connect gate="G$1" pin="B2" pad="1"/>
+<connect gate="G$1" pin="GND" pad="2"/>
+<connect gate="G$1" pin="OE" pad="6"/>
+<connect gate="G$1" pin="VCCA" pad="3"/>
+<connect gate="G$1" pin="VCCB" pad="7"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -19503,6 +19569,11 @@ type 0309, grid 2.5 mm</description>
 <part name="R4" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:26057/1"/>
 <part name="3V3" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="SML0805" package3d_urn="urn:adsk.eagle:package:15830/1"/>
 <part name="R5" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0603" package3d_urn="urn:adsk.eagle:package:26057/1"/>
+<part name="U$5" library="smarttle" deviceset="TXS0102" device=""/>
+<part name="+3V6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
+<part name="P+6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
+<part name="+3V7" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
+<part name="GND8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -19594,7 +19665,7 @@ PA14| SWCLK</text>
 <instance part="GND10" gate="1" x="55.88" y="81.28"/>
 <instance part="C1" gate="G$1" x="55.88" y="93.98"/>
 <instance part="C3" gate="G$1" x="63.5" y="93.98"/>
-<instance part="REDUNDANT" gate="A" x="210.82" y="236.22"/>
+<instance part="REDUNDANT" gate="A" x="248.92" y="238.76"/>
 <instance part="BUTTON" gate="G$1" x="71.12" y="40.64"/>
 <instance part="R12" gate="G$1" x="71.12" y="48.26" rot="R90"/>
 <instance part="U$3" gate="G$1" x="261.62" y="154.94"/>
@@ -19622,6 +19693,11 @@ PA14| SWCLK</text>
 <instance part="R4" gate="G$1" x="137.16" y="40.64" rot="R90"/>
 <instance part="3V3" gate="G$1" x="205.74" y="33.02"/>
 <instance part="R5" gate="G$1" x="205.74" y="43.18" rot="R90"/>
+<instance part="U$5" gate="G$1" x="208.28" y="238.76"/>
+<instance part="+3V6" gate="G$1" x="193.04" y="251.46"/>
+<instance part="P+6" gate="1" x="223.52" y="251.46"/>
+<instance part="+3V7" gate="G$1" x="193.04" y="233.68"/>
+<instance part="GND8" gate="1" x="220.98" y="226.06"/>
 </instances>
 <busses>
 </busses>
@@ -19639,8 +19715,8 @@ PA14| SWCLK</text>
 </segment>
 <segment>
 <pinref part="REDUNDANT" gate="A" pin="4"/>
-<wire x1="215.9" y1="238.76" x2="220.98" y2="238.76" width="0.1524" layer="91"/>
-<label x="220.98" y="238.76" size="1.778" layer="95"/>
+<wire x1="254" y1="241.3" x2="259.08" y2="241.3" width="0.1524" layer="91"/>
+<label x="259.08" y="241.3" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="ESP_GPIO0" class="0">
@@ -19754,8 +19830,8 @@ PA14| SWCLK</text>
 </segment>
 <segment>
 <pinref part="REDUNDANT" gate="A" pin="10"/>
-<wire x1="215.9" y1="231.14" x2="223.52" y2="231.14" width="0.1524" layer="91"/>
-<label x="220.98" y="231.14" size="1.778" layer="95"/>
+<wire x1="254" y1="233.68" x2="261.62" y2="233.68" width="0.1524" layer="91"/>
+<label x="259.08" y="233.68" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="U$3" gate="G$1" pin="GND"/>
@@ -19802,6 +19878,11 @@ PA14| SWCLK</text>
 <pinref part="LCD" gate="A" pin="1"/>
 <wire x1="165.1" y1="243.84" x2="172.72" y2="243.84" width="0.1524" layer="91"/>
 <label x="170.18" y="243.84" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$5" gate="G$1" pin="GND"/>
+<wire x1="220.98" y1="231.14" x2="220.98" y2="228.6" width="0.1524" layer="91"/>
+<pinref part="GND8" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="CH_PD" class="0">
@@ -19874,6 +19955,17 @@ PA14| SWCLK</text>
 <wire x1="63.5" y1="99.06" x2="58.42" y2="99.06" width="0.1524" layer="91"/>
 <junction x="58.42" y="99.06"/>
 </segment>
+<segment>
+<pinref part="U$5" gate="G$1" pin="VCCA"/>
+<wire x1="195.58" y1="246.38" x2="193.04" y2="246.38" width="0.1524" layer="91"/>
+<wire x1="193.04" y1="246.38" x2="193.04" y2="248.92" width="0.1524" layer="91"/>
+<pinref part="+3V6" gate="G$1" pin="+3V3"/>
+</segment>
+<segment>
+<pinref part="U$5" gate="G$1" pin="OE"/>
+<wire x1="195.58" y1="231.14" x2="193.04" y2="231.14" width="0.1524" layer="91"/>
+<pinref part="+3V7" gate="G$1" pin="+3V3"/>
+</segment>
 </net>
 <net name="MOT-" class="0">
 <segment>
@@ -19920,8 +20012,8 @@ PA14| SWCLK</text>
 </segment>
 <segment>
 <pinref part="REDUNDANT" gate="A" pin="1"/>
-<wire x1="208.28" y1="241.3" x2="200.66" y2="241.3" width="0.1524" layer="91"/>
-<label x="198.12" y="241.3" size="1.778" layer="95"/>
+<wire x1="246.38" y1="243.84" x2="238.76" y2="243.84" width="0.1524" layer="91"/>
+<label x="236.22" y="243.84" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="U$3" gate="G$1" pin="VOUT"/>
@@ -19935,6 +20027,12 @@ PA14| SWCLK</text>
 <pinref part="R14" gate="G$1" pin="2"/>
 <pinref part="P+5" gate="1" pin="+5V"/>
 <wire x1="284.48" y1="104.14" x2="287.02" y2="104.14" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$5" gate="G$1" pin="VCCB"/>
+<wire x1="220.98" y1="246.38" x2="223.52" y2="246.38" width="0.1524" layer="91"/>
+<wire x1="223.52" y1="246.38" x2="223.52" y2="248.92" width="0.1524" layer="91"/>
+<pinref part="P+6" gate="1" pin="+5V"/>
 </segment>
 </net>
 <net name="ROW1" class="0">
@@ -20093,8 +20191,8 @@ PA14| SWCLK</text>
 </segment>
 <segment>
 <pinref part="REDUNDANT" gate="A" pin="8"/>
-<wire x1="215.9" y1="233.68" x2="223.52" y2="233.68" width="0.1524" layer="91"/>
-<label x="220.98" y="233.68" size="1.778" layer="95"/>
+<wire x1="254" y1="236.22" x2="261.62" y2="236.22" width="0.1524" layer="91"/>
+<label x="259.08" y="236.22" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="R1" gate="G$1" pin="2"/>
@@ -20123,8 +20221,8 @@ PA14| SWCLK</text>
 </segment>
 <segment>
 <pinref part="REDUNDANT" gate="A" pin="9"/>
-<wire x1="208.28" y1="231.14" x2="200.66" y2="231.14" width="0.1524" layer="91"/>
-<label x="193.04" y="231.14" size="1.778" layer="95"/>
+<wire x1="246.38" y1="233.68" x2="238.76" y2="233.68" width="0.1524" layer="91"/>
+<label x="231.14" y="233.68" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="TIM2_CH4" class="0">
@@ -20142,8 +20240,8 @@ PA14| SWCLK</text>
 </segment>
 <segment>
 <pinref part="REDUNDANT" gate="A" pin="6"/>
-<wire x1="215.9" y1="236.22" x2="223.52" y2="236.22" width="0.1524" layer="91"/>
-<label x="220.98" y="236.22" size="1.778" layer="95"/>
+<wire x1="254" y1="238.76" x2="261.62" y2="238.76" width="0.1524" layer="91"/>
+<label x="259.08" y="238.76" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="DAC" class="0">
@@ -20161,45 +20259,8 @@ PA14| SWCLK</text>
 </segment>
 <segment>
 <pinref part="REDUNDANT" gate="A" pin="3"/>
-<wire x1="208.28" y1="238.76" x2="200.66" y2="238.76" width="0.1524" layer="91"/>
-<label x="198.12" y="238.76" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="SCK" class="0">
-<segment>
-<wire x1="53.34" y1="220.98" x2="50.8" y2="220.98" width="0.1524" layer="91"/>
-<label x="38.1" y="220.98" size="1.778" layer="95"/>
-<pinref part="U1" gate="G$2" pin="PA5"/>
-<wire x1="50.8" y1="220.98" x2="43.18" y2="220.98" width="0.1524" layer="91"/>
-<junction x="50.8" y="220.98"/>
-</segment>
-<segment>
-<pinref part="LCD" gate="A" pin="3"/>
-<wire x1="165.1" y1="238.76" x2="172.72" y2="238.76" width="0.1524" layer="91"/>
-<label x="170.18" y="238.76" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="MISO" class="0">
-<segment>
-<wire x1="53.34" y1="215.9" x2="50.8" y2="215.9" width="0.1524" layer="91"/>
-<label x="38.1" y="215.9" size="1.778" layer="95"/>
-<pinref part="U1" gate="G$2" pin="PA6"/>
-<wire x1="50.8" y1="215.9" x2="43.18" y2="215.9" width="0.1524" layer="91"/>
-<junction x="50.8" y="215.9"/>
-</segment>
-</net>
-<net name="MOSI" class="0">
-<segment>
-<wire x1="53.34" y1="210.82" x2="50.8" y2="210.82" width="0.1524" layer="91"/>
-<label x="38.1" y="210.82" size="1.778" layer="95"/>
-<pinref part="U1" gate="G$2" pin="PA7"/>
-<wire x1="50.8" y1="210.82" x2="43.18" y2="210.82" width="0.1524" layer="91"/>
-<junction x="50.8" y="210.82"/>
-</segment>
-<segment>
-<pinref part="LCD" gate="A" pin="4"/>
-<wire x1="165.1" y1="236.22" x2="172.72" y2="236.22" width="0.1524" layer="91"/>
-<label x="170.18" y="236.22" size="1.778" layer="95"/>
+<wire x1="246.38" y1="241.3" x2="238.76" y2="241.3" width="0.1524" layer="91"/>
+<label x="236.22" y="241.3" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="USART_RX" class="0">
@@ -20217,8 +20278,8 @@ PA14| SWCLK</text>
 </segment>
 <segment>
 <pinref part="REDUNDANT" gate="A" pin="2"/>
-<wire x1="215.9" y1="241.3" x2="220.98" y2="241.3" width="0.1524" layer="91"/>
-<label x="220.98" y="241.3" size="1.778" layer="95"/>
+<wire x1="254" y1="243.84" x2="259.08" y2="243.84" width="0.1524" layer="91"/>
+<label x="259.08" y="243.84" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="LED4" class="0">
@@ -20394,6 +20455,64 @@ PA14| SWCLK</text>
 <pinref part="3V3" gate="G$1" pin="A"/>
 <pinref part="R5" gate="G$1" pin="1"/>
 <wire x1="205.74" y1="38.1" x2="205.74" y2="35.56" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="I2C2_SDA" class="0">
+<segment>
+<pinref part="U1" gate="G$5" pin="PF7"/>
+<wire x1="45.72" y1="132.08" x2="53.34" y2="132.08" width="0.1524" layer="91"/>
+<label x="48.26" y="132.08" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$5" gate="G$1" pin="A1"/>
+<wire x1="195.58" y1="241.3" x2="190.5" y2="241.3" width="0.1524" layer="91"/>
+<label x="182.88" y="241.3" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="REDUNDANT" gate="A" pin="5"/>
+<wire x1="246.38" y1="238.76" x2="238.76" y2="238.76" width="0.1524" layer="91"/>
+<label x="231.14" y="238.76" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="I2C2_SCL" class="0">
+<segment>
+<pinref part="U1" gate="G$5" pin="PF6"/>
+<wire x1="45.72" y1="137.16" x2="53.34" y2="137.16" width="0.1524" layer="91"/>
+<label x="48.26" y="137.16" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$5" gate="G$1" pin="B1"/>
+<wire x1="195.58" y1="236.22" x2="190.5" y2="236.22" width="0.1524" layer="91"/>
+<label x="182.88" y="236.22" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="REDUNDANT" gate="A" pin="7"/>
+<wire x1="246.38" y1="236.22" x2="238.76" y2="236.22" width="0.1524" layer="91"/>
+<label x="231.14" y="236.22" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="SCL" class="0">
+<segment>
+<pinref part="U$5" gate="G$1" pin="B2"/>
+<wire x1="220.98" y1="236.22" x2="226.06" y2="236.22" width="0.1524" layer="91"/>
+<label x="220.98" y="236.22" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="LCD" gate="A" pin="3"/>
+<wire x1="165.1" y1="238.76" x2="172.72" y2="238.76" width="0.1524" layer="91"/>
+<label x="170.18" y="238.76" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="SDA" class="0">
+<segment>
+<pinref part="U$5" gate="G$1" pin="A2"/>
+<wire x1="220.98" y1="241.3" x2="226.06" y2="241.3" width="0.1524" layer="91"/>
+<label x="220.98" y="241.3" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="LCD" gate="A" pin="4"/>
+<wire x1="165.1" y1="236.22" x2="172.72" y2="236.22" width="0.1524" layer="91"/>
+<label x="170.18" y="236.22" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
