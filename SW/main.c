@@ -41,7 +41,10 @@
 #include "stm32f0xx_hal.h"
 
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
+#include <string.h>
 #include "i2cDisplay.h"
+#include "numpad.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -56,7 +59,13 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+uint32_t msCount = 1000;
+uint32_t buttonPress = 0;
+uint32_t buttonState0 = 0;
+int debounce = 0;
+uint32_t btnPress[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+uint32_t btnCurrent[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+uint32_t btnPrevious[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,7 +86,26 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
+    if (htim->Instance == TIM3) {
+        msCount--;
+        if (msCount <= 0) {
+            msCount = 1000;
+        }
+        if (msCount % 5 == 0) {
+            buttonDebounce();
+        }
+        if (msCount % 2 == 0) {
+            debounce = 1;
+        }
+    }
+}
 
+void buttonDebounce() {
+    uint32_t current = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) & 1;
+    buttonPress = !buttonState0 && current;
+    buttonState0 = current;
+}
 /* USER CODE END 0 */
 
 int main(void)
@@ -112,7 +140,9 @@ int main(void)
   MX_TIM3_Init();
 
   /* USER CODE BEGIN 2 */
-
+  HAL_TIM_Base_Start_IT(&htim3);
+  uint8_t pData;
+  uint8_t column = 1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -122,7 +152,77 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-
+//      HAL_GPIO_WritePin(COL2_PORT, COL2_PIN, 1);
+//      HAL_GPIO_WritePin(COL3_PORT, COL3_PIN, 1);
+//      HAL_GPIO_WritePin(COL1_PORT, COL1_PIN, 0);
+//      int tmp = ROW1_PIN;
+//      if (HAL_GPIO_ReadPin(ROW1_PORT, ROW1_PIN) & tmp) {
+//          HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, 1);
+//      }
+//      else {
+//          HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, 0);
+//      }
+//      HAL_GPIO_WritePin(COL1_PORT, COL1_PIN, 1);
+      if (buttonPress) {
+          buttonPress = 0;
+          HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+          pData = 0x30;
+          HAL_I2C_Master_Transmit_IT(&hi2c2, 80, &pData, 1);
+//          uint8_t cat[12] = {0x28, 0x02, 0x01, 0x28, 0x5E, 0x2E, 0x5E,
+//                             0x29, 0x2F, 0x02, 0x29};
+//          HAL_I2C_Master_Transmit_IT(&hi2c2, 80, cat, strlen(cat));
+      }
+      if (debounce) {
+          debounce = 0;
+          matrixDebounce(column++);
+          if (column > 3) {
+              column = 1;
+          }
+      }
+      for (uint32_t index = 0; index < 12; index++) {
+          if (btnPress[index] == 1) {
+              btnPress[index] = 0;
+              switch (index) {
+                  case 0:   // 1
+                      pData = '1';
+                      break;
+                  case 1:   // 4
+                      pData = '4';
+                      break;
+                  case 2:   // 7
+                      pData = '7';
+                      break;
+                  case 3:   // *
+                      pData = '*';
+                      break;
+                  case 4:   // 2
+                      pData = '2';
+                      break;
+                  case 5:   // 5
+                      pData = '5';
+                      break;
+                  case 6:   // 8
+                      pData = '8';
+                      break;
+                  case 7:   // 0
+                      pData = '0';
+                      break;
+                  case 8:   // 3
+                      pData = '3';
+                      break;
+                  case 9:   // 6
+                      pData = '6';
+                      break;
+                  case 10:  // 9
+                      pData = '9';
+                      break;
+                  case 11:  // #
+                      pData = '#';
+                      break;
+              }
+              HAL_I2C_Master_Transmit_IT(&hi2c2, 80, &pData, 1);
+          }
+      }
   }
   /* USER CODE END 3 */
 
