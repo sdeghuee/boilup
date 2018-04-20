@@ -57,16 +57,20 @@ uint32_t msCount = 1000;
 uint32_t buttonPress = 0;
 uint32_t buttonState0 = 0;
 
-int debounce = 0;
-uint32_t btnPress[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-uint32_t btnCurrent[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-uint32_t btnPrevious[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+char rxData = 0x00;
+unsigned char buffer[100];
+unsigned char received[100];
+uint8_t length;
+uint8_t buffer_i = 0;
+uint8_t carriageReturn = 0;
+uint8_t requestingTime = 0;
+uint8_t receivedO = 0;
+uint8_t receivedC = 0;
+uint32_t result = 0;
+uint32_t operand = 0;
+uint32_t txWait = 0;
+uint32_t rxWait = 0;
 
-uint8_t display_commandBits[20] = {0x41, 0x42, 0x45, 0x46, 0x47, 0x48, 0x49,
-                                   0x4A, 0x4B, 0x4C, 0x4E, 0x51, 0x52, 0x53,
-                                   0x54, 0x55, 0x56, 0x62, 0x70, 0x72};
-uint8_t display_delays[20] = {0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 1, 0, 1, 0,
-                              0, 3, 4, 4};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -74,10 +78,101 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+void transmitString(UART_HandleTypeDef * huart, unsigned char * str);
+void receiveString();
+uint32_t testRxString(unsigned char * test);
 
+void wifiConnect(unsigned char * ssid, unsigned char * password);
+void requestTime();
+uint8_t testEndString(unsigned char * a, unsigned char * b);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+void transmitString(UART_HandleTypeDef * huart, unsigned char * str) {
+    HAL_UART_Transmit_IT(huart, str, strlen(str));
+}
+
+void receiveString() {
+    length = buffer_i;
+    buffer_i = 0;
+    for (int i = 0; i < length; i++){
+        received[i] = buffer[i];
+    }
+    for (int i = 0; i < 100; i++) {
+        buffer[i] = 0;
+    }
+}
+
+uint32_t testRxString(unsigned char * test) {
+    if (strlen(test) != length) {
+        return 0;
+    }
+    for (int i = 0; i < length; i++) {
+        if (test[i] != received[i]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void wifiConnect(unsigned char * ssid, unsigned char * password) {
+    //unsigned char command[37];
+    //sprintf(command, "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n");
+    //unsigned char command[37] = "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n";
+    //sprintf(command, "AT+CWJAP=\"%s\",\"%s\"", ssid, password);
+    transmitString(&huart1, "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n");
+}
+
+void requestTime() {
+    requestingTime = 1;
+    transmitString(&huart1, "AT+CIPSTART=\"TCP\",\"time.nist.gov\",13\r\n");
+}
+
+uint8_t testEndString(unsigned char * str, unsigned char * end) {
+    uint32_t start = strlen(str) - strlen(end);
+    for (int i = start; i < strlen(str); i++) {
+        if (str[i] != str[end]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
+    if (rxData == 0x4B && receivedO) {
+        carriageReturn = 1;
+    }
+    else if (requestingTime && rxData == 0x4C && receivedC){
+        carriageReturn = 1;
+    }
+    else if (rxData == 0x4F) {
+        receivedO = 1;
+    }
+    else if (rxData == 0x43) {
+        receivedC = 1;
+    }
+    else if (rxData != 0x0D && rxData != 0x0A) {
+        if (receivedO) {
+            receivedO = 0;
+            buffer[buffer_i++] = 0x4F;
+        }
+        if (receivedC) {
+            receivedC = 0;
+            buffer[buffer_i++] = 0x43;
+        }
+        uint8_t pData = rxData;
+        buffer[buffer_i++] = rxData;
+    }
+    HAL_UART_Receive_IT(&huart1, &rxData, 1);
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart) {
+    for (int i = 0; i < 100; i++) {
+        buffer[i] = 0;
+    }
+    txWait = 0;
+}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
     if (htim->Instance == TIM3) {
         msCount--;
@@ -133,6 +228,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim3);
+  HAL_UART_Receive_IT(&huart1, &rxData, 1);
   uint8_t pData;
   uint8_t column = 1;
   /* USER CODE END 2 */
@@ -147,8 +243,8 @@ int main(void)
       if (buttonPress) {
           buttonPress = 0;
           HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
-          pData = 0x30;
-          HAL_I2C_Master_Transmit_IT(&hi2c2, 80, &pData, 1);
+//          receiveString();
+          i2cDisplayString(&hi2c2, received);
 //          uint8_t cat[12] = {0x28, 0x02, 0x01, 0x28, 0x5E, 0x2E, 0x5E,
 //                             0x29, 0x2F, 0x02, 0x29};
 //          HAL_I2C_Master_Transmit_IT(&hi2c2, 80, cat, strlen(cat));
@@ -160,15 +256,27 @@ int main(void)
               column = 1;
           }
       }
+      if (carriageReturn) {
+          carriageReturn = 0;
+          receivedO = 0;
+          if (requestingTime) {
+              requestingTime = 1;
+              i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN,0x00);
+          }
+          receiveString();
+          i2cDisplayString(&hi2c2, received);
+      }
       for (uint32_t index = 0; index < 12; index++) {
           if (btnPress[index] == 1) {
               btnPress[index] = 0;
               switch (index) {
                   case 0:   // 1
                       pData = '1';
+                      wifiConnect("LZMedia", "SUBterm3575");
                       break;
                   case 1:   // 4
                       pData = '4';
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_MOVELEFT, 0x00);
                       break;
                   case 2:   // 7
                       pData = '7';
@@ -178,6 +286,7 @@ int main(void)
                       break;
                   case 4:   // 2
                       pData = '2';
+                      transmitString(&huart1, "AT\r\n");
                       break;
                   case 5:   // 5
                       pData = '5';
@@ -190,18 +299,21 @@ int main(void)
                       break;
                   case 8:   // 3
                       pData = '3';
+                      requestTime();
                       break;
                   case 9:   // 6
                       pData = '6';
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_MOVELEFT, 0x00);
                       break;
                   case 10:  // 9
                       pData = '9';
                       break;
                   case 11:  // #
                       pData = '#';
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
                       break;
               }
-              HAL_I2C_Master_Transmit_IT(&hi2c2, 80, &pData, 1);
+              //HAL_I2C_Master_Transmit_IT(&hi2c2, 80, &pData, 1);
           }
       }
   }

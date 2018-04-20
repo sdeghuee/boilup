@@ -47,7 +47,10 @@
 /* Configure GPIO                                                             */
 /*----------------------------------------------------------------------------*/
 /* USER CODE BEGIN 1 */
-
+int debounce = 0;
+uint32_t btnPress[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+uint32_t btnCurrent[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+uint32_t btnPrevious[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 /* USER CODE END 1 */
 
 /** Configure pins as 

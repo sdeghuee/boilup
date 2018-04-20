@@ -43,7 +43,11 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+uint8_t display_commandBits[20] = {0x41, 0x42, 0x45, 0x46, 0x47, 0x48, 0x49,
+                                   0x4A, 0x4B, 0x4C, 0x4E, 0x51, 0x52, 0x53,
+                                   0x54, 0x55, 0x56, 0x62, 0x70, 0x72};
+uint8_t display_delays[20] = {0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 1, 0, 1, 0,
+                              0, 3, 4, 4};
 /* USER CODE END 0 */
 
 I2C_HandleTypeDef hi2c2;
