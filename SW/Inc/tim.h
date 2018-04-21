@@ -56,7 +56,7 @@ extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim14;
 
 /* USER CODE BEGIN Private defines */
-
+extern uint8_t updatePump;
 /* USER CODE END Private defines */
 
 extern void _Error_Handler(char *, int);

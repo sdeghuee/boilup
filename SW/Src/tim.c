@@ -41,7 +41,7 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
-
+uint8_t updatePump = 0;
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim2;

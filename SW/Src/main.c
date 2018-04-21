@@ -69,14 +69,100 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-	if(htim->Instance == TIM14){
-		update = 1;
-	}
-	if(htim->Instance == TIM3){
-		if(updateEnable)
-			cycles++;
-	}
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
+//    if (requestingTime) {
+//        if (testEndString(buffer, "CLOSED")) {
+//            carriageReturn = 1;
+//            for (int i = 1; i < 7; i++) {
+//                buffer[buffer_i - i] = 0;
+//            }
+//            buffer_i -= 6;
+//        }
+//        else if (rxData != 0x0D && rxData != 0x0A) {
+//            uint8_t pData = rxData;
+//            buffer[buffer_i++] = rxData;
+//        }
+//    }
+//    else {
+//        if (testEndString(buffer, "OK")) {
+//            // clear last two chars
+//            // and carriageReturn = 1
+//            carriageReturn = 1;
+//            for (int i = 1; i < 3; i++) {
+//                buffer[buffer_i - i] = 0;
+//            }
+//            buffer_i -= 6;
+//        }
+//        else if (rxData != 0x0D && rxData != 0x0A) {
+//            uint8_t pData = rxData;
+//            buffer[buffer_i++] = rxData;
+//        }
+//    }
+    if (rxData == 0x4B && receivedO) {
+        carriageReturn = 1;
+    }
+    else if (requestingTime && rxData == 0x4C && receivedC){
+        requestingTime = 0;
+        timeReady = 1;
+        carriageReturn = 1;
+    }
+    else if (rxData == 0x4F) {
+        receivedO = 1;
+    }
+    else if (rxData == 0x43) {
+        receivedC = 1;
+    }
+    else if (rxData != 0x0D && rxData != 0x0A) {
+        if (receivedO) {
+            receivedO = 0;
+            buffer[buffer_i++] = 0x4F;
+        }
+        if (receivedC) {
+            receivedC = 0;
+            buffer[buffer_i++] = 0x43;
+        }
+        uint8_t pData = rxData;
+        buffer[buffer_i++] = rxData;
+    }
+    HAL_UART_Receive_IT(&huart1, &rxData, 1);
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart) {
+    for (int i = 0; i < 100; i++) {
+        buffer[i] = 0;
+    }
+    txWait = 0;
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
+    if (htim->Instance == TIM3) {
+        msCount--;
+        update = 1;
+        if (msCount <= 0) {
+            msCount = 1000;
+        }
+        if (msCount % 5 == 0) {
+            buttonDebounce();
+        }
+        if (msCount % 2 == 0) {
+            debounce = 1;
+        }
+        if (msCount % 125) {
+            updatePump = 1;
+        }
+        if(updateEnable) {
+            cycles++;
+        }
+    }
+    if(htim->Instance == TIM14){
+        update = 1;
+    }
+}
+
+void buttonDebounce() {
+    uint32_t current = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) & 1;
+    buttonPress = !buttonState0 && current;
+    buttonState0 = current;
 }
 /* USER CODE END 0 */
 
@@ -113,17 +199,108 @@ int main(void)
   MX_TIM14_Init();
 
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_Base_Start_IT(&htim3);
   HAL_TIM_Base_Start_IT(&htim14);
+  HAL_GPIO_WritePin(GPIOC,GPIO_PIN_8,1);
+  HAL_UART_Receive_IT(&huart1, &rxData, 1);
+  uint8_t pData;
+  uint8_t column = 1;
+  updateEnable = 1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  updateEnable = 1;
-  HAL_GPIO_WritePin(GPIOC,GPIO_PIN_8,1);
   while (1)
   {
   /* USER CODE END WHILE */
+      if (buttonPress) {
+          buttonPress = 0;
+          HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+//          receiveString();
+          i2cDisplayString(&hi2c2, received);
+//          uint8_t cat[12] = {0x28, 0x02, 0x01, 0x28, 0x5E, 0x2E, 0x5E,
+//                             0x29, 0x2F, 0x02, 0x29};
+//          HAL_I2C_Master_Transmit_IT(&hi2c2, 80, cat, strlen(cat));
+      }
+      if (updatePump) {
+          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 125); // question 1
+      }
+      else {
+          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
+      }
+      if (debounce) {
+          debounce = 0;
+          matrixDebounce(column++);
+          if (column > 3) {
+              column = 1;
+          }
+      }
+      if (carriageReturn) {
+          carriageReturn = 0;
+          receivedO = 0;
+          receiveString();
+          if (timeReady) {
+              timeReady = 0;
+              i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
+              parseTime(received);
+              i2cDisplayString(&hi2c2, time);
+          }
+          else {
+              i2cDisplayString(&hi2c2, received);
+          }
+      }
+      for (uint32_t index = 0; index < 12; index++) {
+          if (btnPress[index] == 1) {
+              btnPress[index] = 0;
+              switch (index) {
+                  case 0:   // 1
+                      pData = '1';
+                      wifiConnect("LZMedia", "SUBterm3575");
+                      break;
+                  case 1:   // 4
+                      pData = '4';
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_MOVELEFT, 0x00);
+                      break;
+                  case 2:   // 7
+                      pData = '7';
+                      break;
+                  case 3:   // *
+                      pData = '*';
+                      break;
+                  case 4:   // 2
+                      pData = '2';
+                      transmitString(&huart1, "AT\r\n");
+                      break;
+                  case 5:   // 5
+                      pData = '5';
+                      break;
+                  case 6:   // 8
+                      pData = '8';
+                      break;
+                  case 7:   // 0
+                      pData = '0';
+                      break;
+                  case 8:   // 3
+                      pData = '3';
+                      requestTime();
+                      break;
+                  case 9:   // 6
+                      pData = '6';
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_MOVERIGHT, 0x00);
+                      break;
+                  case 10:  // 9
+                      pData = '9';
+                      break;
+                  case 11:  // #
+                      pData = '#';
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
+                      break;
+              }
+              //HAL_I2C_Master_Transmit_IT(&hi2c2, 80, &pData, 1);
+          }
+      }
+  }
 /* CODE FOR SPEAKER: state machine should control stage variable...
  * stage 1 = powerup
  * stage 2 = tea start
