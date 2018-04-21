@@ -65,6 +65,11 @@ void MX_DAC1_Init(void);
 void DoneGetState();
 void DoneSetWave();
 void DoneCheckWave();
+void FFGetState();
+void FFSetWave();
+void FFCheckWave();
+void triGetState(int);
+int triSetWave(int);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

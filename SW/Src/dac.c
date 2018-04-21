@@ -45,13 +45,19 @@
 /* USER CODE BEGIN 0 */
 int max[] = {152,114,90,76,57,45,38,45,144,114,96,72,57,48,36,48,128,102,85,64,51,43,32,0,32,0,32,0,32,28};
 int duty[] = {76,57,45,38,28,22,19,22,72,67,48,36,28,24,18,24,64,51,42,32,25,21,16,0,16,0,16,0,16,14};
-int rate[] = {92,109,184,146,164,218};
+int maxFF[] = {57,0,57,0,57,0,57,71,64,57,0,64,57,76,85,76,85,64,0,64,68,64,68,0,68,76,85,91,85,102,0,
+             76,85,76,85,64,0,64,68,64,68,0,68,76,85,76,64,57,0};
+int dutyFF[]= {28,0,28,0,28,0,28,35,32,28,0,32,28,38,42,38,42,32,0,32,34,32,34,0,34,38,42,45,42,51,0,
+             38,42,38,42,32,0,32,34,32,34,0,34,38,42,38,32,28,0};
+int rate[] = {92,109,182,146,164,218};
 int rate2[] = {80,120,160,200,240,280,320,360};
 int dir = 0;
 int state = 0;
 int doneWave;
 extern int cycles;
 extern int updateEnable;
+extern int stage;
+int repeat = 0;
 /* USER CODE END 0 */
 
 DAC_HandleTypeDef hdac1;
@@ -138,6 +144,18 @@ void DoneCheckWave(){
 	if(doneWave > max[state])
 		doneWave = 0;
 }
+void FFCheckWave(){
+	if(doneWave > maxFF[state])
+		doneWave = 0;
+}
+void FFSetWave(){
+	int val;
+	if(doneWave++ > dutyFF[state])
+		val = 0;
+	else val = 255;
+	HAL_DAC_SetValue(&hdac1,DAC_CHANNEL_1,DAC_ALIGN_8B_R,val);
+	HAL_DAC_Start(&hdac1,DAC_CHANNEL_1);
+}
 void DoneSetWave(){
 	int val;
 	if(doneWave++ > duty[state])
@@ -183,6 +201,125 @@ void DoneGetState(){
 			  updateEnable = 0;
 		  }
 }
+int triSetWave(int val){
+	switch(stage){
+	case 1:
+	if(!dir){
+		val+=rate[state];
+	}
+	else{
+		val -= rate[state];
+	}
+	break;
+	case 2:
+		if(!dir){
+			val+=rate2[state];
+		}
+		else{
+			val-=rate2[state];
+		}
+		break;
+	}
+	if(val >= 4095){
+		val = 4095;
+		dir = 1;
+	}
+	if(val <= 0){
+		val = 0;
+		dir = 0;
+	}
+	HAL_DAC_SetValue(&hdac1,DAC_CHANNEL_1,DAC_ALIGN_12B_R,val);
+	HAL_DAC_Start(&hdac1,DAC_CHANNEL_1);
+	return val;
+}
+void triGetState(int stage){
+	switch(stage){
+	case 1:
+		if(cycles > 160){
+			state++;
+			cycles = 0;
+		}
+		 if(state == 6){
+
+			 state = 0;
+			 updateEnable = 0;
+		 }
+		break;
+	case 2:
+		if(cycles > 40){
+			state++;
+			cycles = 0;
+		}
+		if(state == 8){
+			state = 0;
+			repeat++;
+		}
+		 if(repeat > 1)
+		 {
+			 repeat = 0;
+			 updateEnable = 0;
+		 }
+	}
+}
+void FFGetState(){
+          if(state != 0 && state != 1 && state != 2 && state != 3 && state != 4
+           && state != 5 && state != 9 && state != 10 && state != 11 && state != 12
+		   && state != 16 && state != 17 && state != 18 && state != 19 && state != 21
+            && state != 22 && state != 23 && state != 24 && state != 28
+            && state != 29 && state != 34 && state != 35 && state != 36
+            && state != 37 && state != 39 && state != 40 && state != 41
+            && state != 42 && state != 46 && state != 47){ //quarter
+           if(cycles > 360){//0,1,2,3,4,5,9,10,11,12,16,17,18,19,21,22,23,24,28,29,34,35,36,37,39,40,41,42,46,47
+               state++;
+               cycles = 0;
+           }
+         }else if(state == 12){ //dotted half
+           if(cycles > 1080){
+               state++;
+               cycles = 0;
+           }
+         }else if(state == 0 || state == 2 || state == 4){ //triplets shortened
+               if(cycles > 119){
+                   state++;
+                   cycles = 0;
+           }
+
+           }else if(state == 9 || state == 10 || state == 11){ //triplets normal
+           if(cycles > 120){
+               state++;
+               cycles = 0;
+           }
+           }else if(state == 17 || state == 22 || state == 35 || state == 40){ //quarter shortened
+               if(cycles > 359){
+                   state++;
+                   cycles = 0;
+               }
+
+           }else if(state == 1 || state == 3 || state == 5 || state == 18 || state == 23
+           || state == 36 ||state == 41){ //spaces
+           if(cycles > 1)
+           {
+               state++;
+               cycles = 0;
+           }
+         }else if(state == 16 || state == 19 || state == 21 || state == 24 || state == 28
+               || state == 34 || state == 37 || state == 39 || state == 42 || state == 46){ //eighth
+           if(cycles > 180){
+               state++;
+               cycles = 0;
+           }
+         }          else{ //eighth+dotted half 29, 47
+           if(cycles > 1260){
+               state++;
+               cycles = 0;
+           }
+          }
+          if(state > 48)
+         {
+           state = 0;
+           updateEnable = 0;
+          }
+           }
 /* USER CODE END 1 */
 
 /**

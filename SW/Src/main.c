@@ -56,7 +56,8 @@
 int updateEnable = 0;
 int update = 0;
 int cycles = 0;
-int msCount = 0;
+int stage = 3;
+int waveVal = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -119,17 +120,31 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   updateEnable = 1;
-  HAL_GPIO_WritePin(GPIOC,GPIO_PIN_9,1);
+  HAL_GPIO_WritePin(GPIOC,GPIO_PIN_8,1);
   while (1)
   {
   /* USER CODE END WHILE */
-
+/* CODE FOR SPEAKER: state machine should control stage variable...
+ * stage 1 = powerup
+ * stage 2 = tea start
+ * stage 3 = tea finish
+ */
 	  if(update && updateEnable){
 		  update = 0;
-		  DoneGetState();
-		  DoneSetWave();
-		  DoneCheckWave();
+		  if(stage == 3){
+			  DoneGetState();
+			  //FFGetState();
+			  DoneSetWave();
+			  DoneCheckWave();
+			  //FFSetWave();
+			  //FFCheckWave();
+		  }
+		  if(stage == 1 || stage == 2){
+			  triGetState(stage);
+			  waveVal = triSetWave(waveVal);
+		  }
 	  }
+	  /*END CODE FOR SPEAKER*/
   /* USER CODE BEGIN 3 */
 
   }
