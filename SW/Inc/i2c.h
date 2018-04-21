@@ -54,7 +54,28 @@
 extern I2C_HandleTypeDef hi2c2;
 
 /* USER CODE BEGIN Private defines */
-
+#define DISPLAY_ON              0
+#define DISPLAY_OFF             1
+#define DISPLAY_SETCURSOR       2
+#define DISPLAY_CURSORHOME      3
+#define DISPLAY_UNDERLINEON     4
+#define DISPLAY_UNDERLINEOFF    5
+#define DISPLAY_CURSORLEFT      6
+#define DISPLAY_CURSORRIGHT     7
+#define DISPLAY_BLINKON         8
+#define DISPLAY_BLINKOFF        9
+#define DISPLAY_BACKSPACE      10
+#define DISPLAY_CLEARSCREEN    11
+#define DISPLAY_SETCONTRAST    12
+#define DISPLAY_SETBACKLIGHT   13
+#define DISPLAY_LOADCUSTOM     14
+#define DISPLAY_MOVELEFT       15
+#define DISPLAY_MOVERIGHT      16
+#define DISPLAY_SETADDRESS     17
+#define DISPLAY_SHOWFIRMWARE   18
+#define DISPLAY_SHOWADDRESS    19
+extern uint8_t display_commandBits[20];
+extern uint8_t display_delays[20];
 /* USER CODE END Private defines */
 
 extern void _Error_Handler(char *, int);
@@ -62,7 +83,9 @@ extern void _Error_Handler(char *, int);
 void MX_I2C2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+void i2cDisplaySendCommand(I2C_HandleTypeDef * hi2c, uint8_t command, uint8_t param);
 
+void i2cDisplayString(I2C_HandleTypeDef * hi2c, unsigned char * str);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

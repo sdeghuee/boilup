@@ -43,7 +43,23 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+char rxData = 0x00;
+unsigned char buffer[100];
+unsigned char received[100];
+unsigned char time[9];
+char hoursChar[3];
+char minutesChar[3];
+uint8_t length;
+uint8_t buffer_i = 0;
+uint8_t carriageReturn = 0;
+uint8_t requestingTime = 0;
+uint8_t timeReady = 0;
+uint8_t receivedO = 0;
+uint8_t receivedC = 0;
+uint32_t result = 0;
+uint32_t operand = 0;
+uint32_t txWait = 0;
+uint32_t rxWait = 0;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -137,7 +153,99 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 } 
 
 /* USER CODE BEGIN 1 */
+void transmitString(UART_HandleTypeDef * huart, unsigned char * str) {
+    HAL_UART_Transmit_IT(huart, str, strlen(str));
+}
 
+void receiveString() {
+    length = buffer_i;
+    buffer_i = 0;
+    for (int i = 0; i < length; i++){
+        received[i] = buffer[i];
+    }
+    for (int i = 0; i < 100; i++) {
+        buffer[i] = 0;
+    }
+}
+
+uint32_t testRxString(unsigned char * test) {
+    if (strlen(test) != length) {
+        return 0;
+    }
+    for (int i = 0; i < length; i++) {
+        if (test[i] != received[i]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+void wifiConnect(unsigned char * ssid, unsigned char * password) {
+    //unsigned char command[37];
+    //sprintf(command, "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n");
+    //unsigned char command[37] = "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n";
+    //sprintf(command, "AT+CWJAP=\"%s\",\"%s\"", ssid, password);
+    transmitString(&huart1, "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n");
+}
+
+void requestTime() {
+    requestingTime = 1;
+    transmitString(&huart1, "AT+CIPSTART=\"TCP\",\"time.nist.gov\",13\r\n");
+}
+
+void parseTime(unsigned char * rawTime) {
+        uint8_t foundFirst = 0;
+        uint32_t i = 0;
+        uint32_t offset = 0;
+        while (i < strlen(rawTime)) {
+            if (rawTime[i] == 0x3A) {
+                if (foundFirst) {
+                    offset = i - 2;
+                    break;
+                }
+                else {
+                    foundFirst = 1;
+                }
+            }
+            i++;
+        }
+
+        for (i = 0; i < 5; i++) {
+            if (i < 2) {
+                hoursChar[i] = rawTime[i + offset];
+            }
+            else if (i > 2) {
+                minutesChar[i - 3] = rawTime[i + offset];
+            }
+        }
+        hoursChar[2] = '\0';
+        minutesChar[2] = '\0';
+        uint32_t hoursInt = atoi(hoursChar) - 4;
+        uint32_t minutesInt = atoi(minutesChar);
+        if (hoursInt > 12) {
+            hoursInt -= 12;
+            sprintf(time, "%d%d:%d%d PM", hoursInt / 10, hoursInt % 10, minutesInt / 10, minutesInt % 10);
+        }
+        else {
+            sprintf(time, "%d%d:%d%d AM", hoursInt / 10, hoursInt % 10, minutesInt / 10, minutesInt % 10);
+        }
+        if (hoursInt / 10 == 0) {
+            time[0] = ' ';
+        }
+}
+
+uint8_t testEndString(unsigned char * str, unsigned char * end) {
+    if (strlen(str) < strlen(end)) {
+        return 0;
+    }
+    uint32_t start = strlen(str) - strlen(end);
+    for (int i = start; i < strlen(str); i++) {
+        if (str[i] != end[i]) {
+            return 0;
+        }
+    }
+    return 1;
+}
 /* USER CODE END 1 */
 
 /**

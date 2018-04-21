@@ -54,7 +54,23 @@
 extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN Private defines */
-
+extern char rxData;
+extern unsigned char buffer[100];
+extern unsigned char received[100];
+extern unsigned char time[9];
+extern char hoursChar[3];
+extern char minutesChar[3];
+extern uint8_t length;
+extern uint8_t buffer_i;
+extern uint8_t carriageReturn;
+extern uint8_t requestingTime;
+extern uint8_t timeReady;
+extern uint8_t receivedO;
+extern uint8_t receivedC;
+extern uint32_t result;
+extern uint32_t operand;
+extern uint32_t txWait;
+extern uint32_t rxWait;
 /* USER CODE END Private defines */
 
 extern void _Error_Handler(char *, int);
@@ -62,7 +78,10 @@ extern void _Error_Handler(char *, int);
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void wifiConnect(unsigned char * ssid, unsigned char * password);
+void requestTime();
+void parseTime(unsigned char * rawTime);
+uint8_t testEndString(unsigned char * a, unsigned char * b);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

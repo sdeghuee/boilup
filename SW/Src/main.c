@@ -58,6 +58,9 @@ int update = 0;
 int cycles = 0;
 int stage = 3;
 int waveVal = 0;
+uint32_t msCount = 1000;
+uint32_t buttonPress = 0;
+uint32_t buttonState0 = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

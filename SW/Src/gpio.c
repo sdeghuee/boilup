@@ -47,7 +47,10 @@
 /* Configure GPIO                                                             */
 /*----------------------------------------------------------------------------*/
 /* USER CODE BEGIN 1 */
-
+int debounce = 0;
+uint32_t btnPress[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+uint32_t btnCurrent[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+uint32_t btnPrevious[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 /* USER CODE END 1 */
 
 /** Configure pins as 
@@ -103,7 +106,59 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
+void matrixDebounce(uint32_t column){
+    switch (column) {
+        case 1:
+//            GPIOC->ODR |= 0x00001000;//col3
+//            GPIOD->ODR |= 0x00000004;//col2
+//            GPIOB->ODR &= 0xFFFFFFF7;//col1
+            HAL_GPIO_WritePin(COL2_PORT, COL2_PIN, 1);
+            HAL_GPIO_WritePin(COL3_PORT, COL3_PIN, 1);
+            HAL_GPIO_WritePin(COL1_PORT, COL1_PIN, 0);
+            break;
+        case 2:
+//            GPIOB->ODR |= 0x00000008;
+//            GPIOC->ODR |= 0x00001000;
+//            GPIOD->ODR &= 0xFFFFFFFB;
+            HAL_GPIO_WritePin(COL1_PORT, COL1_PIN, 1);
+            HAL_GPIO_WritePin(COL3_PORT, COL3_PIN, 1);
+            HAL_GPIO_WritePin(COL2_PORT, COL2_PIN, 0);
+            break;
+        case 3:
+//            GPIOB->ODR |= 0x00000008;
+//            GPIOD->ODR |= 0x00000004;
+//            GPIOC->ODR &= 0xFFFFEFFF;
+            HAL_GPIO_WritePin(COL1_PORT, COL1_PIN, 1);
+            HAL_GPIO_WritePin(COL2_PORT, COL2_PIN, 1);
+            HAL_GPIO_WritePin(COL3_PORT, COL3_PIN, 0);
+            break;
+    }
+    for (uint32_t row = 0; row < 4; row++) {
+//        btnCurrent[(column - 1)*4 + row] = !(GPIOB->IDR & (0x10 << (3-row)));
+        switch (row) {
+            case 0:
+                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10));
+                break;
+            case 1:
+                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11));
+                break;
+            case 2:
+                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12));
+                break;
+            case 3:
+                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13));
+                break;
+        }
+//        uint32_t a = !(GPIOB->IDR & (0x400 << row));
+//        btnCurrent[(column - 1)*4 + row] = a;
+        matrixButtonDebounce((column - 1)*4 + row);
+    }
+}
 
+void matrixButtonDebounce(uint32_t index) {
+    btnPress[index] = !btnPrevious[index] && btnCurrent[index];
+    btnPrevious[index] = btnCurrent[index];
+}
 /* USER CODE END 2 */
 
 /**

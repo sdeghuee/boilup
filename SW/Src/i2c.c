@@ -43,7 +43,11 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+uint8_t display_commandBits[20] = {0x41, 0x42, 0x45, 0x46, 0x47, 0x48, 0x49,
+                                   0x4A, 0x4B, 0x4C, 0x4E, 0x51, 0x52, 0x53,
+                                   0x54, 0x55, 0x56, 0x62, 0x70, 0x72};
+uint8_t display_delays[20] = {0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 2, 1, 0, 1, 0,
+                              0, 3, 4, 4};
 /* USER CODE END 0 */
 
 I2C_HandleTypeDef hi2c2;
@@ -140,7 +144,54 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
 } 
 
 /* USER CODE BEGIN 1 */
+void i2cDisplaySendCommand(I2C_HandleTypeDef * hi2c, uint8_t command, uint8_t param) {
+    if (command == 2 || command == 12 || command == 13 || command == 17) {
+        uint8_t pData[3] = {0xFE, display_commandBits[command], param};
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, &pData, 3);
+        HAL_Delay(display_delays[command]);
+    }
+    else if (command != DISPLAY_LOADCUSTOM) {
+        uint8_t pData[2] = {0xFE, display_commandBits[command]};
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, &pData, 2);
+        HAL_Delay(display_delays[command]);
+    }
+    else {
+        uint8_t slash[11] = {0xFE, 0x54, 0x01, 0x00, 0x10, 0x08, 0x04,
+                             0x02, 0x01, 0x00, 0x00};
+        uint8_t tripleApostrophe[11] = {0xFE, 0x54, 0x02, 0x15, 0x15, 0x15, 0x00,
+                             0x00, 0x00, 0x00, 0x00};
+        uint8_t kettleLeft[11] = {0xFE, 0x54, 0x03, 0x01, 0x03, 0x0F, 0x0B,
+                             0x0B, 0x0F, 0x03, 0x00};
+        uint8_t kettleRight[11] = {0xFE, 0x54, 0x04, 0x10, 0x18, 0x18, 0x1B,
+                             0x1E, 0x1C, 0x18, 0x00};
+        uint8_t pData[11] = {0xFE, 0x54, 0x01, 0x00, 0x00, 0x00, 0x00,
+                                         0x00, 0x00, 0x00, 0x00};
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, &pData, 11);
+        HAL_Delay(display_delays[command]);
+        pData[2] = 0x02;
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, &pData, 11);
+        HAL_Delay(display_delays[command]);
+        pData[2] = 0x03;
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, &pData, 11);
+        HAL_Delay(display_delays[command]);
+        pData[2] = 0x04;
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, &pData, 11);
+        HAL_Delay(display_delays[command]);
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, &slash, 11);
+        HAL_Delay(display_delays[command]+2);
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, &tripleApostrophe, 11);
+        HAL_Delay(display_delays[command]+2);
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, &kettleLeft, 11);
+        HAL_Delay(display_delays[command]+2);
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, &kettleRight, 11);
+        HAL_Delay(display_delays[command]+2);
+    }
+}
 
+
+void i2cDisplayString(I2C_HandleTypeDef * hi2c, unsigned char * str) {
+    HAL_I2C_Master_Transmit_IT(hi2c, 80, str, strlen(str));
+}
 /* USER CODE END 1 */
 
 /**

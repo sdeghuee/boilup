@@ -53,13 +53,32 @@
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private defines */
+#define ROW1_PORT   GPIOB
+#define ROW2_PORT   GPIOB
+#define ROW3_PORT   GPIOB
+#define ROW4_PORT   GPIOB
+#define COL1_PORT   GPIOB
+#define COL2_PORT   GPIOB
+#define COL3_PORT   GPIOC
+#define ROW1_PIN    GPIO_PIN_10
+#define ROW2_PIN    GPIO_PIN_11
+#define ROW3_PIN    GPIO_PIN_12
+#define ROW4_PIN    GPIO_PIN_13
+#define COL1_PIN    GPIO_PIN_14
+#define COL2_PIN    GPIO_PIN_15
+#define COL3_PIN    GPIO_PIN_6
 
+extern int debounce;
+extern uint32_t btnPress[12];
+extern uint32_t btnCurrent[12];
+extern uint32_t btnPrevious[12];
 /* USER CODE END Private defines */
 
 void MX_GPIO_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void matrixDebounce(uint32_t column);
+void matrixButtonDebounce(uint32_t index);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
