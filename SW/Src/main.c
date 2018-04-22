@@ -217,6 +217,8 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
+
+  /* USER CODE BEGIN 3 */
       if (buttonPress) {
           buttonPress = 0;
           HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
@@ -303,30 +305,27 @@ int main(void)
               //HAL_I2C_Master_Transmit_IT(&hi2c2, 80, &pData, 1);
           }
       }
-  }
 /* CODE FOR SPEAKER: state machine should control stage variable...
  * stage 1 = powerup
  * stage 2 = tea start
  * stage 3 = tea finish
  */
-	  if(update && updateEnable){
-		  update = 0;
-		  if(stage == 3){
-			  DoneGetState();
-			  //FFGetState();
-			  DoneSetWave();
-			  DoneCheckWave();
-			  //FFSetWave();
-			  //FFCheckWave();
-		  }
-		  if(stage == 1 || stage == 2){
-			  triGetState(stage);
-			  waveVal = triSetWave(waveVal);
-		  }
-	  }
-	  /*END CODE FOR SPEAKER*/
-  /* USER CODE BEGIN 3 */
-
+      if(update && updateEnable){
+          update = 0;
+          if(stage == 3){
+              DoneGetState();
+              //FFGetState();
+              DoneSetWave();
+              DoneCheckWave();
+              //FFSetWave();
+              //FFCheckWave();
+          }
+          if(stage == 1 || stage == 2){
+              triGetState(stage);
+              waveVal = triSetWave(waveVal);
+          }
+      }
+      /*END CODE FOR SPEAKER*/
   }
   /* USER CODE END 3 */
 
