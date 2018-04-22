@@ -220,8 +220,12 @@ void parseTime(unsigned char * rawTime) {
         }
         hoursChar[2] = '\0';
         minutesChar[2] = '\0';
-        uint32_t hoursInt = atoi(hoursChar) - 4;
+        uint32_t hoursInt = atoi(hoursChar);
         uint32_t minutesInt = atoi(minutesChar);
+        if (hoursInt < 4) {
+            hoursInt += 24;
+        }
+        hoursInt -= 4;
         if (hoursInt > 12) {
             hoursInt -= 12;
             sprintf(time, "%d%d:%d%d PM", hoursInt / 10, hoursInt % 10, minutesInt / 10, minutesInt % 10);

@@ -205,8 +205,8 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_Base_Start_IT(&htim3);
   HAL_TIM_Base_Start_IT(&htim14);
-  HAL_GPIO_WritePin(GPIOC,GPIO_PIN_8,1);
   HAL_UART_Receive_IT(&huart1, &rxData, 1);
+  i2cDisplaySendCommand(&hi2c2, DISPLAY_LOADCUSTOM, 0x00);
   uint8_t pData;
   uint8_t column = 1;
   updateEnable = 1;
@@ -221,12 +221,13 @@ int main(void)
   /* USER CODE BEGIN 3 */
       if (buttonPress) {
           buttonPress = 0;
-          HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+//          HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+//          requestTime();
 //          receiveString();
-          i2cDisplayString(&hi2c2, received);
-//          uint8_t cat[12] = {0x28, 0x02, 0x01, 0x28, 0x5E, 0x2E, 0x5E,
-//                             0x29, 0x2F, 0x02, 0x29};
-//          HAL_I2C_Master_Transmit_IT(&hi2c2, 80, cat, strlen(cat));
+//          i2cDisplayString(&hi2c2, received);
+          uint8_t cat[12] = {0x28, 0x02, 0x01, 0x28, 0x5E, 0x2E, 0x5E,
+                             0x29, 0x2F, 0x02, 0x29};
+          HAL_I2C_Master_Transmit_IT(&hi2c2, 80, cat, strlen(cat));
       }
       if (updatePump) {
           __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 125); // question 1
