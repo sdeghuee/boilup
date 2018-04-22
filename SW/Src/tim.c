@@ -274,7 +274,12 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 } 
 
 /* USER CODE BEGIN 1 */
-
+void servoDown(){
+	__HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_3,100);
+}
+void servoUp(){
+	__HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_3,120);
+}
 /* USER CODE END 1 */
 
 /**
