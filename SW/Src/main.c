@@ -57,20 +57,22 @@
 int updateDACEnable = 0;
 int updateDAC = 0;
 int cycles = 0;
-int dacStage = 3;
+int dacStage = 1;
 int waveVal = 0;
 uint8_t promptDisplayed = 0;
-uint8_t tenSec = 1;
 uint8_t error = 0;
 uint8_t digit = 0;
 uint8_t servoWait = 0;
+uint8_t workOnce = 0;
 uint32_t state = 0;
 uint32_t cups = 0;
+int32_t pumpCups = 0;
 uint32_t msCount = 1000;
-uint32_t secondCount = 0;
+uint32_t secondCount = 10;
 uint32_t buttonPress = 1;
 uint32_t buttonState0 = 1;
 Time alarm;
+Time eight;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -157,10 +159,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
         }
         if (secondCount == 10) {
             secondCount = 0;
-            tenSec = 1;
-            cups--;
-            if (cups <= 0) {
+            requestTime();
+            if (pumpCups - 1 <= 0 && state == 4) {
+                state = 1;
                 __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0); // question 1
+            }
+            else {
+                if (state == 4) {
+                    pumpCups--;
+                }
             }
         }
         if (msCount % 5 == 0) {
@@ -212,11 +219,12 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DAC1_Init();
-  MX_USART1_UART_Init();
   MX_TIM2_Init();
   MX_I2C2_Init();
   MX_TIM3_Init();
   MX_TIM14_Init();
+  HAL_Delay(5000);
+  MX_USART1_UART_Init();
 
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
@@ -228,6 +236,10 @@ int main(void)
   i2cDisplaySendCommand(&hi2c2, DISPLAY_LOADCUSTOM, 0x00);
   i2cDisplaySendCommand(&hi2c2, DISPLAY_BLINKOFF, 0x00);
   i2cDisplaySendCommand(&hi2c2, DISPLAY_SETBACKLIGHT, 0x08);
+  eight.hours = 20;
+  eight.minutes = 0;
+  eight.pm = 1;
+  formatTime(&eight);
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0); // question 1
   uint8_t column = 1;
   updateDACEnable = 1;
@@ -240,6 +252,7 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, buttonPress);
       if (debounce) {
           debounce = 0;
           matrixDebounce(column++);
@@ -255,21 +268,25 @@ int main(void)
           if (timeReady) {
               timeReady = 0;
               parseTime(received);
-              if (state != 2 && state != 3 && state != 4) {
+              if (state != 2 && state != 3 && state != 4 && !timeEqual(eight, currentTime)) {
                   i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
                   i2cDisplayString(&hi2c2, currentTime.str);
               }
               if (timeEqual(currentTime, alarm)) {
-                  state = 5;
+                  if (!workOnce) {
+                      workOnce = 1;
+                      state = 5;
+                  }
               }
           }
           else {
-              i2cDisplayString(&hi2c2, received);
+              for (int i = 0; i < 100; i++) {
+                  received[i] = 0;
+              }
           }
-      }
-      if (tenSec) {
-          tenSec = 0;
-          requestTime();
+//          else {
+//              i2cDisplayString(&hi2c2, received);
+//          }
       }
       unsigned char matrixButton = 0;
       for (uint32_t index = 0; index < 12; index++) {
@@ -295,7 +312,7 @@ int main(void)
                           case 3:
                               if (digit >= 5) {
                                   state = 4;
-                                  tenSec = 0;
+                                  msCount = 1000;
                                   secondCount = 0;
                                   promptDisplayed = 0;
                                   digit = 0;
@@ -313,10 +330,13 @@ int main(void)
                       break;
                   case '#':
                       promptDisplayed = 0;
+                      workOnce = 0;
                       digit = 0;
+                      __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
                       if (!error) {
                         state = 1;
                         i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
+                        i2cDisplaySendCommand(&hi2c2, DISPLAY_BLINKOFF, 0x00);
                         i2cDisplayString(&hi2c2, currentTime.str);
                       }
                       break;
@@ -340,6 +360,7 @@ int main(void)
               break;
           case 1:   // waiting
               // do nothing
+              servoWait = 0;
               break;
           case 2:   // set alarm - cups
               if (!error) {
@@ -356,6 +377,7 @@ int main(void)
                               sprintf(&num, "%c", matrixButton);
                               i2cDisplayString(&hi2c2, num);
                               cups = atoi(num);
+                              pumpCups = cups;
                           }
                           else {
                               error = 1;
@@ -456,7 +478,7 @@ int main(void)
                   promptDisplayed = 1;
                   i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
                   unsigned char message[16];
-                  sprintf(&message, "%d cups, ready at", cups);
+                  sprintf(&message, "%d cups, start at", cups);
                   i2cDisplayString(&hi2c2, message);
                   HAL_Delay(5);
                   i2cDisplaySendCommand(&hi2c2, DISPLAY_SETCURSOR, 0x40);
@@ -464,9 +486,9 @@ int main(void)
                   i2cDisplayString(&hi2c2, alarm.str);
                   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 125); // question 1
               }
-              if (cups <= 0) {
-                  state = 1;
-              }
+//              if (cups <= 0) {
+//                  state = 1;
+//              }
               break;
           case 5:   // start water
               if (!servoWait) {
@@ -480,7 +502,7 @@ int main(void)
               break;
           case 6:   // water started
               if (!servoWait) {
-                  HAL_Delay(1000);
+                  HAL_Delay(1500);
                   servoUp();
                   servoWait = 1;
                   updateDACEnable = 1;
@@ -496,6 +518,8 @@ int main(void)
                   servoWait = 1;
                   updateDACEnable = 1;
                   dacStage = 3;
+                  workOnce = 0;
+                  state = 1;
               }
               break;
       }

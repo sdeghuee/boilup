@@ -181,19 +181,19 @@ uint32_t testRxString(unsigned char * test) {
     return 1;
 }
 
-void wifiConnect(unsigned char * ssid, unsigned char * password) {
+void wifiConnect() {
     //unsigned char command[37];
     //sprintf(command, "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n");
     //unsigned char command[37] = "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n";
     //sprintf(command, "AT+CWJAP=\"%s\",\"%s\"", ssid, password);
-    transmitString(&huart1, "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n");
+
+    //transmitString(&huart1, "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n");
+    transmitString(&huart1, "AT+CWJAP=\"Hai-Fi\",\"0123456789\"\r\n");
 }
 
 void requestTime() {
-    if (!requestingTime) {
-        transmitString(&huart1, "AT+CIPSTART=\"TCP\",\"time.nist.gov\",13\r\n");
-    }
     requestingTime = 1;
+    transmitString(&huart1, "AT+CIPSTART=\"TCP\",\"time.nist.gov\",13\r\n");
 }
 
 void parseTime(unsigned char * rawTime) {
@@ -211,6 +211,9 @@ void parseTime(unsigned char * rawTime) {
                 }
             }
             i++;
+        }
+        if (!foundFirst) {
+            receiveString();
         }
 
         for (i = 0; i < 5; i++) {

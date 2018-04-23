@@ -80,7 +80,7 @@ extern void _Error_Handler(char *, int);
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-void wifiConnect(unsigned char * ssid, unsigned char * password);
+void wifiConnect();
 void requestTime();
 void parseTime(unsigned char * rawTime);
 uint8_t testEndString(unsigned char * a, unsigned char * b);
