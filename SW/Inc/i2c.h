@@ -74,6 +74,8 @@ extern I2C_HandleTypeDef hi2c2;
 #define DISPLAY_SETADDRESS     17
 #define DISPLAY_SHOWFIRMWARE   18
 #define DISPLAY_SHOWADDRESS    19
+#define DISPLAY_CAT            20
+#define DISPLAY_KETTLE         21
 extern uint8_t display_commandBits[20];
 extern uint8_t display_delays[20];
 /* USER CODE END Private defines */

@@ -145,7 +145,17 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
 
 /* USER CODE BEGIN 1 */
 void i2cDisplaySendCommand(I2C_HandleTypeDef * hi2c, uint8_t command, uint8_t param) {
-    if (command == 2 || command == 12 || command == 13 || command == 17) {
+    if (command == DISPLAY_CAT) {
+        uint8_t cat[12] = {0x28, 0x02, 0x01, 0x28, 0x5E, 0x2E, 0x5E,
+                           0x29, 0x2F, 0x02, 0x29};
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, cat, strlen(cat));
+    }
+    else if (command == DISPLAY_KETTLE) {
+        uint8_t kettle[12] = {0x03, 0x04, 0x00, 0x00, 0x00, 0x00,
+                              0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        HAL_I2C_Master_Transmit_IT(hi2c, 80, kettle, strlen(kettle));
+    }
+    else if (command == 2 || command == 12 || command == 13 || command == 17) {
         uint8_t pData[3] = {0xFE, display_commandBits[command], param};
         HAL_I2C_Master_Transmit_IT(hi2c, 80, &pData, 3);
         HAL_Delay(display_delays[command]);
@@ -191,6 +201,7 @@ void i2cDisplaySendCommand(I2C_HandleTypeDef * hi2c, uint8_t command, uint8_t pa
 
 void i2cDisplayString(I2C_HandleTypeDef * hi2c, unsigned char * str) {
     HAL_I2C_Master_Transmit_IT(hi2c, 80, str, strlen(str));
+    HAL_Delay(2);
 }
 /* USER CODE END 1 */
 

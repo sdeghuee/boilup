@@ -86,7 +86,7 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pins : PB10 PB11 PB12 PB13 */
   GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB14 PB15 */
@@ -158,6 +158,49 @@ void matrixDebounce(uint32_t column){
 void matrixButtonDebounce(uint32_t index) {
     btnPress[index] = !btnPrevious[index] && btnCurrent[index];
     btnPrevious[index] = btnCurrent[index];
+}
+
+unsigned char matrixGetButton(uint32_t index) {
+    unsigned char pData;
+    switch (index) {
+        case 0:   // 1
+          pData = '1';
+          break;
+        case 1:   // 4
+          pData = '4';
+          break;
+        case 2:   // 7
+          pData = '7';
+          break;
+        case 3:   // *
+          pData = '*';
+          break;
+        case 4:   // 2
+          pData = '2';
+          break;
+        case 5:   // 5
+          pData = '5';
+          break;
+        case 6:   // 8
+          pData = '8';
+          break;
+        case 7:   // 0
+          pData = '0';
+          break;
+        case 8:   // 3
+          pData = '3';
+          break;
+        case 9:   // 6
+          pData = '6';
+          break;
+        case 10:  // 9
+          pData = '9';
+          break;
+        case 11:  // #
+          pData = '#';
+          break;
+    }
+    return pData;
 }
 /* USER CODE END 2 */
 

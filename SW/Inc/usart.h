@@ -46,6 +46,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_hal.h"
 #include "main.h"
+#include "time.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -58,6 +59,7 @@ extern char rxData;
 extern unsigned char buffer[100];
 extern unsigned char received[100];
 extern unsigned char time[9];
+extern Time currentTime;
 extern char hoursChar[3];
 extern char minutesChar[3];
 extern uint8_t length;

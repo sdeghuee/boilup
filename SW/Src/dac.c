@@ -52,11 +52,11 @@ int dutyFF[]= {28,0,28,0,28,0,28,35,32,28,0,32,28,38,42,38,42,32,0,32,34,32,34,0
 int rate[] = {92,109,182,146,164,218};
 int rate2[] = {80,120,160,200,240,280,320,360};
 int dir = 0;
-int state = 0;
+int stateDac = 0;
 int doneWave;
 extern int cycles;
-extern int updateEnable;
-extern int stage;
+extern int updateDACEnable;
+extern int dacStage;
 int repeat = 0;
 /* USER CODE END 0 */
 
@@ -141,16 +141,16 @@ void HAL_DAC_MspDeInit(DAC_HandleTypeDef* dacHandle)
 
 /* USER CODE BEGIN 1 */
 void DoneCheckWave(){
-	if(doneWave > max[state])
+	if(doneWave > max[stateDac])
 		doneWave = 0;
 }
 void FFCheckWave(){
-	if(doneWave > maxFF[state])
+	if(doneWave > maxFF[stateDac])
 		doneWave = 0;
 }
 void FFSetWave(){
 	int val;
-	if(doneWave++ > dutyFF[state])
+	if(doneWave++ > dutyFF[stateDac])
 		val = 0;
 	else val = 255;
 	HAL_DAC_SetValue(&hdac1,DAC_CHANNEL_1,DAC_ALIGN_8B_R,val);
@@ -158,65 +158,65 @@ void FFSetWave(){
 }
 void DoneSetWave(){
 	int val;
-	if(doneWave++ > duty[state])
+	if(doneWave++ > duty[stateDac])
 		val = 0;
 	else val = 255;
 	HAL_DAC_SetValue(&hdac1,DAC_CHANNEL_1,DAC_ALIGN_8B_R,val);
 	HAL_DAC_Start(&hdac1,DAC_CHANNEL_1);
 }
 void DoneGetState(){
-		  if(state != 6 && state != 7 && state != 14 && state != 15 && state != 22
-				  && state != 29 && state != 23 && state != 25 && state != 27){
+		  if(stateDac != 6 && stateDac != 7 && stateDac != 14 && stateDac != 15 && stateDac != 22
+				  && stateDac != 29 && stateDac != 23 && stateDac != 25 && stateDac != 27){
 			  if(cycles > 138){
-				  state++;
+				  stateDac++;
 				  cycles = 0;
 			  }
-		  }else if(state == 29){
+		  }else if(stateDac == 29){
 			  if(cycles > 828){
-				  state++;
+				  stateDac++;
 				  cycles = 0;
 			  }
 		  }
-		  else if(state == 23 || state == 25 || state == 27){
+		  else if(stateDac == 23 || stateDac == 25 || stateDac == 27){
 			  if(cycles > 1)
 			  {
-				  state++;
+				  stateDac++;
 				  cycles = 0;
 			  }
-		  }else if(state == 24 || state == 26 || state == 28){
+		  }else if(stateDac == 24 || stateDac == 26 || stateDac == 28){
 			  if(cycles > 137){
-				  state++;
+				  stateDac++;
 				  cycles = 0;
 			  }
 		  }
 		  else{
 			  if(cycles > 414){
-				  state++;
+				  stateDac++;
 				  cycles = 0;
 			  }
 		  }
-		  if(state > 29)
+		  if(stateDac > 29)
 		  {
-			  state = 0;
-			  updateEnable = 0;
+			  stateDac = 0;
+			  updateDACEnable = 0;
 		  }
 }
 int triSetWave(int val){
-	switch(stage){
+	switch(dacStage){
 	case 1:
 	if(!dir){
-		val+=rate[state];
+		val+=rate[stateDac];
 	}
 	else{
-		val -= rate[state];
+		val -= rate[stateDac];
 	}
 	break;
 	case 2:
 		if(!dir){
-			val+=rate2[state];
+			val+=rate2[stateDac];
 		}
 		else{
-			val-=rate2[state];
+			val-=rate2[stateDac];
 		}
 		break;
 	}
@@ -236,88 +236,88 @@ void triGetState(int stage){
 	switch(stage){
 	case 1:
 		if(cycles > 160){
-			state++;
+			stateDac++;
 			cycles = 0;
 		}
-		 if(state == 6){
+		 if(stateDac == 6){
 
-			 state = 0;
-			 updateEnable = 0;
+			 stateDac = 0;
+			 updateDACEnable = 0;
 		 }
 		break;
 	case 2:
 		if(cycles > 40){
-			state++;
+			stateDac++;
 			cycles = 0;
 		}
-		if(state == 8){
-			state = 0;
+		if(stateDac == 8){
+			stateDac = 0;
 			repeat++;
 		}
 		 if(repeat > 1)
 		 {
 			 repeat = 0;
-			 updateEnable = 0;
+			 updateDACEnable = 0;
 		 }
 	}
 }
-void FFGetState(){
-          if(state != 0 && state != 1 && state != 2 && state != 3 && state != 4
-           && state != 5 && state != 9 && state != 10 && state != 11 && state != 12
-		   && state != 16 && state != 17 && state != 18 && state != 19 && state != 21
-            && state != 22 && state != 23 && state != 24 && state != 28
-            && state != 29 && state != 34 && state != 35 && state != 36
-            && state != 37 && state != 39 && state != 40 && state != 41
-            && state != 42 && state != 46 && state != 47){ //quarter
+void FFGetstateDac(){
+          if(stateDac != 0 && stateDac != 1 && stateDac != 2 && stateDac != 3 && stateDac != 4
+           && stateDac != 5 && stateDac != 9 && stateDac != 10 && stateDac != 11 && stateDac != 12
+		   && stateDac != 16 && stateDac != 17 && stateDac != 18 && stateDac != 19 && stateDac != 21
+            && stateDac != 22 && stateDac != 23 && stateDac != 24 && stateDac != 28
+            && stateDac != 29 && stateDac != 34 && stateDac != 35 && stateDac != 36
+            && stateDac != 37 && stateDac != 39 && stateDac != 40 && stateDac != 41
+            && stateDac != 42 && stateDac != 46 && stateDac != 47){ //quarter
            if(cycles > 360){//0,1,2,3,4,5,9,10,11,12,16,17,18,19,21,22,23,24,28,29,34,35,36,37,39,40,41,42,46,47
-               state++;
+               stateDac++;
                cycles = 0;
            }
-         }else if(state == 12){ //dotted half
+         }else if(stateDac == 12){ //dotted half
            if(cycles > 1080){
-               state++;
+               stateDac++;
                cycles = 0;
            }
-         }else if(state == 0 || state == 2 || state == 4){ //triplets shortened
+         }else if(stateDac == 0 || stateDac == 2 || stateDac == 4){ //triplets shortened
                if(cycles > 119){
-                   state++;
+                   stateDac++;
                    cycles = 0;
            }
 
-           }else if(state == 9 || state == 10 || state == 11){ //triplets normal
+           }else if(stateDac == 9 || stateDac == 10 || stateDac == 11){ //triplets normal
            if(cycles > 120){
-               state++;
+               stateDac++;
                cycles = 0;
            }
-           }else if(state == 17 || state == 22 || state == 35 || state == 40){ //quarter shortened
+           }else if(stateDac == 17 || stateDac == 22 || stateDac == 35 || stateDac == 40){ //quarter shortened
                if(cycles > 359){
-                   state++;
+                   stateDac++;
                    cycles = 0;
                }
 
-           }else if(state == 1 || state == 3 || state == 5 || state == 18 || state == 23
-           || state == 36 ||state == 41){ //spaces
+           }else if(stateDac == 1 || stateDac == 3 || stateDac == 5 || stateDac == 18 || stateDac == 23
+           || stateDac == 36 ||stateDac == 41){ //spaces
            if(cycles > 1)
            {
-               state++;
+               stateDac++;
                cycles = 0;
            }
-         }else if(state == 16 || state == 19 || state == 21 || state == 24 || state == 28
-               || state == 34 || state == 37 || state == 39 || state == 42 || state == 46){ //eighth
+         }else if(stateDac == 16 || stateDac == 19 || stateDac == 21 || stateDac == 24 || stateDac == 28
+               || stateDac == 34 || stateDac == 37 || stateDac == 39 || stateDac == 42 || stateDac == 46){ //eighth
            if(cycles > 180){
-               state++;
+               stateDac++;
                cycles = 0;
            }
          }          else{ //eighth+dotted half 29, 47
            if(cycles > 1260){
-               state++;
+               stateDac++;
                cycles = 0;
            }
           }
-          if(state > 48)
+          if(stateDac > 48)
          {
-           state = 0;
-           updateEnable = 0;
+           stateDac = 0;
+           updateDACEnable = 0;
           }
            }
 /* USER CODE END 1 */

@@ -47,6 +47,7 @@ char rxData = 0x00;
 unsigned char buffer[100];
 unsigned char received[100];
 unsigned char time[9];
+Time currentTime;
 char hoursChar[3];
 char minutesChar[3];
 uint8_t length;
@@ -189,8 +190,10 @@ void wifiConnect(unsigned char * ssid, unsigned char * password) {
 }
 
 void requestTime() {
+    if (!requestingTime) {
+        transmitString(&huart1, "AT+CIPSTART=\"TCP\",\"time.nist.gov\",13\r\n");
+    }
     requestingTime = 1;
-    transmitString(&huart1, "AT+CIPSTART=\"TCP\",\"time.nist.gov\",13\r\n");
 }
 
 void parseTime(unsigned char * rawTime) {
@@ -220,22 +223,13 @@ void parseTime(unsigned char * rawTime) {
         }
         hoursChar[2] = '\0';
         minutesChar[2] = '\0';
-        uint32_t hoursInt = atoi(hoursChar);
-        uint32_t minutesInt = atoi(minutesChar);
-        if (hoursInt < 4) {
-            hoursInt += 24;
+        currentTime.hours = atoi(hoursChar);
+        currentTime.minutes = atoi(minutesChar);
+        if (currentTime.hours < 4) {
+            currentTime.hours += 24;
         }
-        hoursInt -= 4;
-        if (hoursInt > 12) {
-            hoursInt -= 12;
-            sprintf(time, "%d%d:%d%d PM", hoursInt / 10, hoursInt % 10, minutesInt / 10, minutesInt % 10);
-        }
-        else {
-            sprintf(time, "%d%d:%d%d AM", hoursInt / 10, hoursInt % 10, minutesInt / 10, minutesInt % 10);
-        }
-        if (hoursInt / 10 == 0) {
-            time[0] = ' ';
-        }
+        currentTime.hours -= 4;
+        formatTime(&currentTime);
 }
 
 uint8_t testEndString(unsigned char * str, unsigned char * end) {

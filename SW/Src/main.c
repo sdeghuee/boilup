@@ -44,6 +44,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "time.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -53,14 +54,23 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-int updateEnable = 0;
-int update = 0;
+int updateDACEnable = 0;
+int updateDAC = 0;
 int cycles = 0;
-int stage = 3;
+int dacStage = 3;
 int waveVal = 0;
+uint8_t promptDisplayed = 0;
+uint8_t tenSec = 1;
+uint8_t error = 0;
+uint8_t digit = 0;
+uint8_t servoWait = 0;
+uint32_t state = 0;
+uint32_t cups = 0;
 uint32_t msCount = 1000;
-uint32_t buttonPress = 0;
-uint32_t buttonState0 = 0;
+uint32_t secondCount = 0;
+uint32_t buttonPress = 1;
+uint32_t buttonState0 = 1;
+Time alarm;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -140,9 +150,18 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef * huart) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
     if (htim->Instance == TIM3) {
         msCount--;
-        update = 1;
+        updateDAC = 1;
         if (msCount <= 0) {
             msCount = 1000;
+            secondCount++;
+        }
+        if (secondCount == 10) {
+            secondCount = 0;
+            tenSec = 1;
+            cups--;
+            if (cups <= 0) {
+                __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0); // question 1
+            }
         }
         if (msCount % 5 == 0) {
             buttonDebounce();
@@ -150,22 +169,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
         if (msCount % 2 == 0) {
             debounce = 1;
         }
-        if (msCount % 125) {
-            updatePump = 1;
-        }
-        if(updateEnable) {
+        if(updateDACEnable) {
             cycles++;
         }
     }
     if(htim->Instance == TIM14){
-        update = 1;
+        updateDAC = 1;
     }
 }
 
 void buttonDebounce() {
     uint32_t current = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) & 1;
-    buttonPress = !buttonState0 && current;
-    buttonState0 = current;
+//    buttonPress = !buttonState0 && current;
+//    buttonState0 = current;
+    buttonPress = current;
 }
 /* USER CODE END 0 */
 
@@ -203,13 +220,17 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
   HAL_TIM_Base_Start_IT(&htim3);
   HAL_TIM_Base_Start_IT(&htim14);
   HAL_UART_Receive_IT(&huart1, &rxData, 1);
   i2cDisplaySendCommand(&hi2c2, DISPLAY_LOADCUSTOM, 0x00);
-  uint8_t pData;
+  i2cDisplaySendCommand(&hi2c2, DISPLAY_BLINKOFF, 0x00);
+  i2cDisplaySendCommand(&hi2c2, DISPLAY_SETBACKLIGHT, 0x08);
+  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0); // question 1
   uint8_t column = 1;
-  updateEnable = 1;
+  updateDACEnable = 1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -219,22 +240,6 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-      if (buttonPress) {
-          buttonPress = 0;
-//          HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
-//          requestTime();
-//          receiveString();
-//          i2cDisplayString(&hi2c2, received);
-          uint8_t cat[12] = {0x28, 0x02, 0x01, 0x28, 0x5E, 0x2E, 0x5E,
-                             0x29, 0x2F, 0x02, 0x29};
-          HAL_I2C_Master_Transmit_IT(&hi2c2, 80, cat, strlen(cat));
-      }
-      if (updatePump) {
-          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 125); // question 1
-      }
-      else {
-          __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
-      }
       if (debounce) {
           debounce = 0;
           matrixDebounce(column++);
@@ -245,75 +250,266 @@ int main(void)
       if (carriageReturn) {
           carriageReturn = 0;
           receivedO = 0;
+          receivedC = 0;
           receiveString();
           if (timeReady) {
               timeReady = 0;
-              i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
               parseTime(received);
-              i2cDisplayString(&hi2c2, time);
+              if (state != 2 && state != 3 && state != 4) {
+                  i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
+                  i2cDisplayString(&hi2c2, currentTime.str);
+              }
+              if (timeEqual(currentTime, alarm)) {
+                  state = 5;
+              }
           }
           else {
               i2cDisplayString(&hi2c2, received);
           }
       }
+      if (tenSec) {
+          tenSec = 0;
+          requestTime();
+      }
+      unsigned char matrixButton = 0;
       for (uint32_t index = 0; index < 12; index++) {
           if (btnPress[index] == 1) {
               btnPress[index] = 0;
-              switch (index) {
-                  case 0:   // 1
-                      pData = '1';
-                      wifiConnect("LZMedia", "SUBterm3575");
+              matrixButton = matrixGetButton(index);
+              switch (matrixButton) {
+                  case '*':
+                      switch (state) {
+                          case 1:
+                              state = 2;
+                              break;
+                          case 2:
+                              if (cups > 0) {
+                                  alarm.hours = 0;
+                                  alarm.minutes = 0;
+                                  alarm.pm = 0;
+                                  state = 3;
+                                  digit = 1;
+                                  promptDisplayed = 0;
+                              }
+                              break;
+                          case 3:
+                              if (digit >= 5) {
+                                  state = 4;
+                                  tenSec = 0;
+                                  secondCount = 0;
+                                  promptDisplayed = 0;
+                                  digit = 0;
+                                  if (alarm.pm) {
+                                      alarm.hours += 12;
+                                  }
+                                  i2cDisplaySendCommand(&hi2c2, DISPLAY_BLINKOFF, 0x00);
+                                  i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
+                                  i2cDisplayString(&hi2c2, currentTime.str);
+                              }
+                              break;
+                          default:
+                              break;
+                      }
                       break;
-                  case 1:   // 4
-                      pData = '4';
-                      i2cDisplaySendCommand(&hi2c2, DISPLAY_MOVELEFT, 0x00);
+                  case '#':
+                      promptDisplayed = 0;
+                      digit = 0;
+                      if (!error) {
+                        state = 1;
+                        i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
+                        i2cDisplayString(&hi2c2, currentTime.str);
+                      }
                       break;
-                  case 2:   // 7
-                      pData = '7';
+                  default:
                       break;
-                  case 3:   // *
-                      pData = '*';
-                      break;
-                  case 4:   // 2
-                      pData = '2';
-                      transmitString(&huart1, "AT\r\n");
-                      break;
-                  case 5:   // 5
-                      pData = '5';
-                      break;
-                  case 6:   // 8
-                      pData = '8';
-                      break;
-                  case 7:   // 0
-                      pData = '0';
-                      break;
-                  case 8:   // 3
-                      pData = '3';
-                      requestTime();
-                      break;
-                  case 9:   // 6
-                      pData = '6';
-                      i2cDisplaySendCommand(&hi2c2, DISPLAY_MOVERIGHT, 0x00);
-                      break;
-                  case 10:  // 9
-                      pData = '9';
-                      break;
-                  case 11:  // #
-                      pData = '#';
-                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
-                      break;
+              }
+              if (error) {
+                  error = 0;
               }
               //HAL_I2C_Master_Transmit_IT(&hi2c2, 80, &pData, 1);
           }
       }
+
+      // begin state machine
+      switch (state) {
+          case 0:   // startup
+              updateDACEnable = 1;
+              dacStage = 1;
+              state = 1;
+              servoUp();
+              break;
+          case 1:   // waiting
+              // do nothing
+              break;
+          case 2:   // set alarm - cups
+              if (!error) {
+                  if (!promptDisplayed) {
+                      promptDisplayed = 1;
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
+                      i2cDisplayString(&hi2c2, "How many cups: ");
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_BLINKON, 0x00);
+                  }
+                  else {
+                      if (matrixButton != '*' && matrixButton != '#' && matrixButton != 0) {
+                          if (matrixButton > '0' && matrixButton <= '4') {  // 4 liter kettle
+                              unsigned char num[2];
+                              sprintf(&num, "%c", matrixButton);
+                              i2cDisplayString(&hi2c2, num);
+                              cups = atoi(num);
+                          }
+                          else {
+                              error = 1;
+                          }
+                      }
+                  }
+              }
+              else {
+                  if (promptDisplayed) {
+                      promptDisplayed = 0;
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
+                      i2cDisplayString(&hi2c2, "4 Cups Max.");
+                  }
+              }
+              break;
+          case 3:   // set alarm - time
+              if (!error) {
+                  if (!promptDisplayed) {
+                      promptDisplayed = 1;
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_SETCURSOR, 0x40);
+                      i2cDisplayString(&hi2c2, "Time: 00:00 AM");
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_SETCURSOR, 0x46);
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_BLINKON, 0x00);
+                  }
+                  else {
+                      if (matrixButton != '*' && matrixButton != '#' && matrixButton != 0) {
+                          unsigned char num[2];
+                          sprintf(&num, "%c", matrixButton);
+                          switch (digit) {
+                              case 1:
+                                  if (matrixButton <= '1') {
+                                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CURSORRIGHT, 0x00);
+                                      i2cDisplaySendCommand(&hi2c2, DISPLAY_BACKSPACE, 0x00);
+                                      i2cDisplayString(&hi2c2, num);
+                                      alarm.hours += 10*atoi(num);
+                                      digit++;
+                                  }
+                                  break;
+                              case 2:
+                                  if (alarm.hours < 10 || matrixButton <= '2') {
+                                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CURSORRIGHT, 0x00);
+                                      i2cDisplaySendCommand(&hi2c2, DISPLAY_BACKSPACE, 0x00);
+                                      i2cDisplayString(&hi2c2, num);
+                                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CURSORRIGHT, 0x00);
+                                      alarm.hours += atoi(num);
+                                      digit++;
+                                  }
+                                  break;
+                              case 3:
+                                  if (matrixButton <= '6') {
+                                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CURSORRIGHT, 0x00);
+                                      i2cDisplaySendCommand(&hi2c2, DISPLAY_BACKSPACE, 0x00);
+                                      i2cDisplayString(&hi2c2, num);
+                                      alarm.minutes += 10*atoi(num);
+                                      digit++;
+                                  }
+                                  break;
+                              case 4:
+                                  i2cDisplaySendCommand(&hi2c2, DISPLAY_CURSORRIGHT, 0x00);
+                                  i2cDisplaySendCommand(&hi2c2, DISPLAY_BACKSPACE, 0x00);
+                                  i2cDisplayString(&hi2c2, num);
+                                  i2cDisplaySendCommand(&hi2c2, DISPLAY_CURSORRIGHT, 0x00);
+                                  alarm.minutes += atoi(num);
+                                  digit++;
+                                  break;
+                              case 5:
+                                  if (matrixButton != '*') {
+                                      if (alarm.pm) {
+                                          alarm.pm = 0;
+                                          sprintf(&num, "%c", 'A');
+                                      }
+                                      else {
+                                          alarm.pm = 1;
+                                          sprintf(&num, "%c", 'P');
+                                      }
+                                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CURSORRIGHT, 0x00);
+                                      i2cDisplaySendCommand(&hi2c2, DISPLAY_BACKSPACE, 0x00);
+                                      i2cDisplayString(&hi2c2, num);
+                                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CURSORLEFT, 0x00);
+                                  }
+                                  break;
+                              default:
+                                  break;
+                          }
+                      }
+                  }
+              }
+              else {
+                  if (promptDisplayed) {
+                      promptDisplayed = 0;
+                      i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
+                      i2cDisplayString(&hi2c2, "4 Cups Max.");
+                  }
+              }
+              break;
+          case 4:   // pump
+              if (!promptDisplayed) {
+                  promptDisplayed = 1;
+                  i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
+                  unsigned char message[16];
+                  sprintf(&message, "%d cups, ready at", cups);
+                  i2cDisplayString(&hi2c2, message);
+                  HAL_Delay(5);
+                  i2cDisplaySendCommand(&hi2c2, DISPLAY_SETCURSOR, 0x40);
+                  formatTime(&alarm);
+                  i2cDisplayString(&hi2c2, alarm.str);
+                  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 125); // question 1
+              }
+              if (cups <= 0) {
+                  state = 1;
+              }
+              break;
+          case 5:   // start water
+              if (!servoWait) {
+                  servoWait = 1;
+                  servoDown();
+              }
+              if (!buttonPress) {
+                  state = 6;
+                  servoWait = 0;
+              }
+              break;
+          case 6:   // water started
+              if (!servoWait) {
+                  HAL_Delay(1000);
+                  servoUp();
+                  servoWait = 1;
+                  updateDACEnable = 1;
+                  dacStage = 2;
+              }
+              if (buttonPress) {
+                  state = 7;
+                  servoWait = 0;
+              }
+              break;
+          case 7:   // water ready
+              if (!servoWait) {
+                  servoWait = 1;
+                  updateDACEnable = 1;
+                  dacStage = 3;
+              }
+              break;
+      }
+
+      // end state machine
+
 /* CODE FOR SPEAKER: state machine should control stage variable...
- * stage 1 = powerup
- * stage 2 = tea start
- * stage 3 = tea finish
+ * dacStage 1 = powerup
+ * dacStage 2 = tea start
+ * dacStage 3 = tea finish
  */
-      if(update && updateEnable){
-          update = 0;
-          if(stage == 3){
+      if(updateDAC && updateDACEnable){
+          updateDAC = 0;
+          if(dacStage == 3){
               DoneGetState();
               //FFGetState();
               DoneSetWave();
@@ -321,8 +517,8 @@ int main(void)
               //FFSetWave();
               //FFCheckWave();
           }
-          if(stage == 1 || stage == 2){
-              triGetState(stage);
+          if(dacStage == 1 || dacStage == 2){
+              triGetState(dacStage);
               waveVal = triSetWave(waveVal);
           }
       }
