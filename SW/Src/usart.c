@@ -232,6 +232,10 @@ void parseTime(unsigned char * rawTime) {
             currentTime.hours += 24;
         }
         currentTime.hours -= 4;
+        if (currentTime.hours == 0) {
+            currentTime.hours += 12;
+        }
+        currentTime.alarmEnabled = 0;
         formatTime(&currentTime);
 }
 

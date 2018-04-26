@@ -49,8 +49,8 @@ int maxFF[] = {57,0,57,0,57,0,57,71,64,57,0,64,57,76,85,76,85,64,0,64,68,64,68,0
              76,85,76,85,64,0,64,68,64,68,0,68,76,85,76,64,57,0};
 int dutyFF[]= {28,0,28,0,28,0,28,35,32,28,0,32,28,38,42,38,42,32,0,32,34,32,34,0,34,38,42,45,42,51,0,
              38,42,38,42,32,0,32,34,32,34,0,34,38,42,38,32,28,0};
-int rate[] = {92,109,182,146,164,218};
-int rate2[] = {80,120,160,200,240,280,320,360};
+int rate[] = {80,120,160,200,240,280,320,360};
+int rate2[] = {92,109,182,146,164,218};
 int dir = 0;
 int stateDac = 0;
 int doneWave;
@@ -160,7 +160,8 @@ void DoneSetWave(){
 	int val;
 	if(doneWave++ > duty[stateDac])
 		val = 0;
-	else val = 255;
+//	else val = 255;
+    else val = 7;
 	HAL_DAC_SetValue(&hdac1,DAC_CHANNEL_1,DAC_ALIGN_8B_R,val);
 	HAL_DAC_Start(&hdac1,DAC_CHANNEL_1);
 }
@@ -203,22 +204,22 @@ void DoneGetState(){
 }
 int triSetWave(int val){
 	switch(dacStage){
-	case 1:
-	if(!dir){
-		val+=rate[stateDac];
-	}
-	else{
-		val -= rate[stateDac];
-	}
-	break;
-	case 2:
-		if(!dir){
-			val+=rate2[stateDac];
-		}
-		else{
-			val-=rate2[stateDac];
-		}
-		break;
+        case 1:
+            if(!dir){
+                val+=rate[stateDac];
+            }
+            else{
+                val -= rate[stateDac];
+            }
+            break;
+        case 2:
+            if(!dir){
+                val+=rate2[stateDac];
+            }
+            else{
+                val-=rate2[stateDac];
+            }
+            break;
 	}
 	if(val >= 4095){
 		val = 4095;
@@ -235,30 +236,30 @@ int triSetWave(int val){
 void triGetState(int stage){
 	switch(stage){
 	case 1:
-		if(cycles > 160){
-			stateDac++;
-			cycles = 0;
-		}
-		 if(stateDac == 6){
-
-			 stateDac = 0;
-			 updateDACEnable = 0;
-		 }
-		break;
-	case 2:
 		if(cycles > 40){
 			stateDac++;
 			cycles = 0;
 		}
-		if(stateDac == 8){
-			stateDac = 0;
-			repeat++;
-		}
-		 if(repeat > 1)
-		 {
-			 repeat = 0;
-			 updateDACEnable = 0;
+		 if(stateDac == 8){
+
+			 stateDac = 0;
+            repeat++;
 		 }
+         if(repeat > 1)
+         {
+             repeat = 0;
+             updateDACEnable = 0;
+         }
+		break;
+	case 2:
+		if(cycles > 160){
+			stateDac++;
+			cycles = 0;
+		}
+		if(stateDac == 6){
+			stateDac = 0;
+           updateDACEnable = 0;
+		}
 	}
 }
 void FFGetstateDac(){
