@@ -352,7 +352,6 @@ int main(void)
           else if (alarmTimeReady) {
               alarmTimeReady = 0;
               parseAlarm(received);
-              formatTime(&alarm);
               if (state == Wait) {
                   state = Pump;
                   msCount = 1000;

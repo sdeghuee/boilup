@@ -217,7 +217,7 @@ void parseAlarm(unsigned char * alarmTime) {
         }
         alarm.minutes = atoi(minStr);
         alarm.pm = 0;
-        if (alarmTime[6] == 'P') {
+        if (alarmTime[6] == 0x50) {
             alarm.hours += 12;
             alarm.pm = 1;
         }
