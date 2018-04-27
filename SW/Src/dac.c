@@ -160,8 +160,8 @@ void DoneSetWave(){
 	int val;
 	if(doneWave++ > duty[stateDac])
 		val = 0;
-//	else val = 255;
-    else val = 7;
+	else val = 255;
+//    else val = 7;
 	HAL_DAC_SetValue(&hdac1,DAC_CHANNEL_1,DAC_ALIGN_8B_R,val);
 	HAL_DAC_Start(&hdac1,DAC_CHANNEL_1);
 }

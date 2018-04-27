@@ -65,6 +65,7 @@ uint8_t digit = 0;
 uint8_t servoWait = 0;          // remove
 uint8_t workOnce = 0;           // remove
 uint8_t secondFour = 0;
+uint8_t pauseCheck = 0;
 // alarm enable check
 //uint32_t state = 0;
 typedef enum {
@@ -307,12 +308,17 @@ int main(void)
   /* USER CODE BEGIN 3 */
       if (secondFour) {
           secondFour = 0;
-          requestingAlarm = 1;
-//          transmitString(&huart1, "AT+CIPSTART=1,\"TCP\",\"http://sdeghuee.pythonanywhere.com\",80\r\n");
-//          HAL_Delay(500);
-          transmitString(&huart1, "AT+CIPSEND=1,71\r\n");
-          HAL_Delay(500);
-          transmitString(&huart1, "GET / HTTP/1.1\r\nHost: sdeghuee.pythonanywhere.com\r\nUser-Agent: test\r\n\r\n");
+          if (!pauseCheck) {
+			  requestingAlarm = 1;
+	//          transmitString(&huart1, "AT+CIPSTART=1,\"TCP\",\"http://sdeghuee.pythonanywhere.com\",80\r\n");
+	//          HAL_Delay(500);
+			  transmitString(&huart1, "AT+CIPSEND=1,71\r\n");
+			  HAL_Delay(500);
+			  transmitString(&huart1, "GET / HTTP/1.1\r\nHost: sdeghuee.pythonanywhere.com\r\nUser-Agent: test\r\n\r\n");
+          }
+          else {
+        	  pauseCheck = 0;
+          }
       }
       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, buttonPress);
       if (debounce) {
@@ -677,6 +683,7 @@ int main(void)
                   waterReadyRunYet = StateRun;
                   updateDACEnable = 1;
                   dacStage = 3;
+                  pauseCheck = 1;
                   state = Wait;
                   alarm.hours = 0;
                   alarm.minutes = 0;
