@@ -47,6 +47,7 @@ char rxData = 0x00;
 unsigned char buffer[100];
 unsigned char received[100];
 unsigned char time[9];
+Time alarm;
 Time currentTime;
 char hoursChar[3];
 char minutesChar[3];
@@ -54,7 +55,9 @@ uint8_t length;
 uint8_t buffer_i = 0;
 uint8_t carriageReturn = 0;
 uint8_t requestingTime = 0;
+uint8_t requestingAlarm = 0;
 uint8_t timeReady = 0;
+uint8_t alarmTimeReady = 0;
 uint8_t receivedO = 0;
 uint8_t receivedC = 0;
 uint32_t result = 0;
@@ -193,7 +196,49 @@ void wifiConnect() {
 
 void requestTime() {
     requestingTime = 1;
-    transmitString(&huart1, "AT+CIPSTART=\"TCP\",\"time.nist.gov\",13\r\n");
+    transmitString(&huart1, "AT+CIPSTART=0,\"TCP\",\"time.nist.gov\",13\r\n");
+}
+
+void requestAlarm() {
+    requestingAlarm = 1;
+//    transmitString(&huart1, "AT+CIPSTART=1,\"TCP\",\"http://sdeghuee.pythonanywhere.com\",80\r\n");
+    transmitString(&huart1, "AT+CIPSEND=1,71\r\nGET / HTTP/1.1\r\nHost: sdeghuee.pythonanywhere.com\r\nUser-Agent: test\r\n\r\n");
+}
+
+void parseAlarm(unsigned char * alarmTime) {
+    // '1 12:00PM'
+    cups = alarmTime[0] - '0';
+    pumpCups = cups;
+    if (alarmTime[3] == ':') {
+        alarm.hours = alarmTime[2] - '0';
+        unsigned char minStr[2];
+        for (int i = 0; i < 2; i++) {
+            minStr[i] = alarmTime[i + 4];
+        }
+        alarm.minutes = atoi(minStr);
+        alarm.pm = 0;
+        if (alarmTime[6] == 'P') {
+            alarm.hours += 12;
+            alarm.pm = 1;
+        }
+    }
+    else {
+        unsigned char hoursStr[2];
+        for (int i = 0; i < 2; i++) {
+            hoursStr[i] = alarmTime[i + 2];
+        }
+        alarm.hours = atoi(hoursStr);
+        unsigned char minStr[2];
+        for (int i = 0; i < 2; i++) {
+            minStr[i] = alarmTime[i + 5];
+        }
+        alarm.minutes = atoi(minStr);
+        alarm.pm = 0;
+        if (alarmTime[7] == 'P') {
+            alarm.hours += 12;
+            alarm.pm = 1;
+        }
+    }
 }
 
 void parseTime(unsigned char * rawTime) {

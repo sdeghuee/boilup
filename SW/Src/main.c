@@ -64,6 +64,7 @@ uint8_t error = 0;
 uint8_t digit = 0;
 uint8_t servoWait = 0;          // remove
 uint8_t workOnce = 0;           // remove
+uint8_t secondFour = 0;
 // alarm enable check
 //uint32_t state = 0;
 typedef enum {
@@ -89,12 +90,11 @@ stateRunYet startBoilRunYet = StateNotRun;
 stateRunYet switchResetRunYet = StateNotRun;
 stateRunYet waterReadyRunYet = StateNotRun;
 uint32_t cups = 0;
-int32_t pumpCups = 0;       // fix
+uint32_t pumpCups = 0;       // fix
 uint32_t msCount = 1000;
 uint32_t secondCount = 10;
 uint32_t buttonPress = 1;
 uint32_t buttonState0 = 1;
-Time alarm;
 
 uint32_t count = 0;
 uint8_t once = 0;
@@ -151,6 +151,25 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
         timeReady = 1;
         carriageReturn = 1;
     }
+    else if (rxData == 0x26 && requestingAlarm) {
+        for (int i = 0; i < 100; i++) {
+            buffer[i] = 0;
+        }
+        buffer_i = 0;
+        requestingAlarm = 0;
+    }
+    else if (rxData == 0x26) {
+        carriageReturn = 1;
+        alarmTimeReady = 1;
+    }
+    else if (rxData == 0x5E) {  //^
+        for (int i = 0; i < 100; i++) {
+            buffer[i] = 0;
+            received[i] = 0;
+        }
+        buffer_i = 0;
+        carriageReturn = 1;
+    }
     else if (rxData == 0x4F) {
         receivedO = 1;
     }
@@ -166,7 +185,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart) {
             receivedC = 0;
             buffer[buffer_i++] = 0x43;
         }
-        uint8_t pData = rxData;
         buffer[buffer_i++] = rxData;
     }
     HAL_UART_Receive_IT(&huart1, &rxData, 1);
@@ -186,6 +204,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
         if (msCount <= 0) {
             msCount = 1000;
             secondCount++;
+            if (secondCount == 6) {
+                //requestAlarm();
+                secondFour = 1;
+            }
         }
         if (secondCount == 10) {
             secondCount = 0;
@@ -258,7 +280,7 @@ int main(void)
   MX_I2C2_Init();
   MX_TIM3_Init();
   MX_TIM14_Init();
-  HAL_Delay(2000);
+  HAL_Delay(10000);
   MX_USART1_UART_Init();
 
   /* USER CODE BEGIN 2 */
@@ -283,6 +305,15 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
+      if (secondFour) {
+          secondFour = 0;
+          requestingAlarm = 1;
+//          transmitString(&huart1, "AT+CIPSTART=1,\"TCP\",\"http://sdeghuee.pythonanywhere.com\",80\r\n");
+//          HAL_Delay(500);
+          transmitString(&huart1, "AT+CIPSEND=1,71\r\n");
+          HAL_Delay(500);
+          transmitString(&huart1, "GET / HTTP/1.1\r\nHost: sdeghuee.pythonanywhere.com\r\nUser-Agent: test\r\n\r\n");
+      }
       HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, buttonPress);
       if (debounce) {
           debounce = 0;
@@ -298,7 +329,7 @@ int main(void)
           receiveString();
           if (timeReady) {
               timeReady = 0;
-              if (received[0] == 0x00) {
+              if (received[0] == 0x00 || received[0] == '0') {
                   requestTime();
               }
               else {
@@ -316,6 +347,28 @@ int main(void)
                           state = StartBoil;
                       }
                   }
+              }
+          }
+          else if (alarmTimeReady) {
+              alarmTimeReady = 0;
+              parseAlarm(received);
+              formatTime(&alarm);
+              if (state == Wait) {
+                  state = Pump;
+                  msCount = 1000;
+                  secondCount = 0;
+                  digit = 0;
+                  alarm.alarmEnabled = 1;
+              }
+              setCupsRunYet = StateNotRun;
+              errorRunYet = StateNotRun;
+              setTimeRunYet = StateNotRun;
+              pumpRunYet = StateNotRun;
+              startBoilRunYet = StateNotRun;
+              switchResetRunYet = StateNotRun;
+              waterReadyRunYet = StateNotRun;
+              for (int i = 0; i < 100; i++) {
+                  received[i] = 0;
               }
           }
           else {
@@ -350,9 +403,10 @@ int main(void)
                     cups = 0;
                     pumpCups = 0;
                     digit = 0;
+//                    i2cDisplayString(&hi2c2, currentTime.str);
+                    requestTime();
                     i2cDisplaySendCommand(&hi2c2, DISPLAY_CLEARSCREEN, 0x00);
                     i2cDisplaySendCommand(&hi2c2, DISPLAY_BLINKOFF, 0x00);
-                    i2cDisplayString(&hi2c2, currentTime.str);
                   }
               }
               /*
@@ -428,9 +482,11 @@ int main(void)
       // begin state machine
       switch (state) {
           case Startup:   // startup
+              transmitString(&huart1, "AT+CIPMUX=1\r\n");
+              HAL_Delay(1000);
+              transmitString(&huart1, "AT+CIPSTART=1,\"TCP\",\"http://sdeghuee.pythonanywhere.com\",80\r\n");
               updateDACEnable = 1;
-//              dacStage = 1;
-              dacStage = 2;
+              dacStage = 1;
               servoUp();
               state = Wait;
               break;
@@ -488,7 +544,7 @@ int main(void)
                       i2cDisplayString(&hi2c2, "4 Cups Max.");
                       HAL_Delay(5);
                       i2cDisplaySendCommand(&hi2c2, DISPLAY_SETCURSOR, 0x40);
-                      i2cDisplayString(&hi2c2, "1 Cups Min.");
+                      i2cDisplayString(&hi2c2, "1 Cup Min.");
                   }
               }
               break;
