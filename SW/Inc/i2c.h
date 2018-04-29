@@ -54,6 +54,7 @@
 extern I2C_HandleTypeDef hi2c2;
 
 /* USER CODE BEGIN Private defines */
+// defines to make sending commands to the display more readable
 #define DISPLAY_ON              0
 #define DISPLAY_OFF             1
 #define DISPLAY_SETCURSOR       2

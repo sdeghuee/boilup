@@ -57,6 +57,7 @@ void MX_I2C2_Init(void)
 {
 
   hi2c2.Instance = I2C2;
+  // we found that 500 ns rise time and 50KHz clockrate was necessary for reliable display
 //  hi2c2.Init.Timing = 0x302095F7; // 30KHz?
 //  hi2c2.Init.Timing = 0x20303EFD; // 50KHz
 //  hi2c2.Init.Timing = 0x20703EF9; // 50KHz - 250 ns rise time
@@ -159,16 +160,19 @@ void i2cDisplaySendCommand(I2C_HandleTypeDef * hi2c, uint8_t command, uint8_t pa
         HAL_I2C_Master_Transmit_IT(hi2c, 80, kettle, strlen(kettle));
     }
     else if (command == 2 || command == 12 || command == 13 || command == 17) {
+        // these commands require giving a parameter
         uint8_t pData[3] = {0xFE, display_commandBits[command], param};
         HAL_I2C_Master_Transmit_IT(hi2c, 80, &pData, 3);
         HAL_Delay(display_delays[command]);
     }
     else if (command != DISPLAY_LOADCUSTOM) {
+        // commands that don't require giving a parameter
         uint8_t pData[2] = {0xFE, display_commandBits[command]};
         HAL_I2C_Master_Transmit_IT(hi2c, 80, &pData, 2);
         HAL_Delay(display_delays[command]);
     }
     else {
+        // load custom command
         uint8_t slash[11] = {0xFE, 0x54, 0x01, 0x00, 0x10, 0x08, 0x04,
                              0x02, 0x01, 0x00, 0x00};
         uint8_t tripleApostrophe[11] = {0xFE, 0x54, 0x02, 0x15, 0x15, 0x15, 0x00,
@@ -203,6 +207,7 @@ void i2cDisplaySendCommand(I2C_HandleTypeDef * hi2c, uint8_t command, uint8_t pa
 
 
 void i2cDisplayString(I2C_HandleTypeDef * hi2c, unsigned char * str) {
+    // function for sending a string to the display
     HAL_I2C_Master_Transmit_IT(hi2c, 80, str, strlen(str));
     HAL_Delay(2);
 }

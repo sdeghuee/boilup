@@ -61,9 +61,6 @@ uint8_t alarmTimeReady = 0;
 uint8_t receivedO = 0;
 uint8_t receivedC = 0;
 uint32_t result = 0;
-uint32_t operand = 0;
-uint32_t txWait = 0;
-uint32_t rxWait = 0;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -158,10 +155,13 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 
 /* USER CODE BEGIN 1 */
 void transmitString(UART_HandleTypeDef * huart, unsigned char * str) {
+    // function to send a string over USART
     HAL_UART_Transmit_IT(huart, str, strlen(str));
 }
 
 void receiveString() {
+    // function to copy everything in buffer into received
+    // and also clear the buffer array
     length = buffer_i;
     buffer_i = 0;
     for (int i = 0; i < length; i++){
@@ -172,129 +172,92 @@ void receiveString() {
     }
 }
 
-uint32_t testRxString(unsigned char * test) {
-    if (strlen(test) != length) {
-        return 0;
-    }
-    for (int i = 0; i < length; i++) {
-        if (test[i] != received[i]) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-void wifiConnect() {
-    //unsigned char command[37];
-    //sprintf(command, "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n");
-    //unsigned char command[37] = "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n";
-    //sprintf(command, "AT+CWJAP=\"%s\",\"%s\"", ssid, password);
-
-    //transmitString(&huart1, "AT+CWJAP=\"LZMedia_24\",\"SUBterm3575\"\r\n");
-    transmitString(&huart1, "AT+CWJAP=\"Hai-Fi\",\"0123456789\"\r\n");
-}
-
 void requestTime() {
-    requestingTime = 1;
+    // function to tell the ESP to get time data from time server
+    requestingTime = 1;     // set flag to indicate time data is expected
     transmitString(&huart1, "AT+CIPSTART=0,\"TCP\",\"time.nist.gov\",13\r\n");
 }
 
-void requestAlarm() {
-    requestingAlarm = 1;
-//    transmitString(&huart1, "AT+CIPSTART=1,\"TCP\",\"http://sdeghuee.pythonanywhere.com\",80\r\n");
-    transmitString(&huart1, "AT+CIPSEND=1,71\r\nGET / HTTP/1.1\r\nHost: sdeghuee.pythonanywhere.com\r\nUser-Agent: test\r\n\r\n");
-}
-
 void parseAlarm(unsigned char * alarmTime) {
-    // '1 12:00PM'
-    cups = alarmTime[0] - '0';
+    // function to store slack command data into usable variables
+    cups = alarmTime[0] - '0';  // cups is the first characters
     pumpCups = cups;
     if (alarmTime[3] == ':') {
-        alarm.hours = alarmTime[2] - '0';
-        unsigned char minStr[2];
+        // happens if there was no tens digit for hours, ie /teatime 2 4:00PM
+        alarm.hours = alarmTime[2] - '0';   // save the hours
+        unsigned char minStr[2];    // substring for minutes
         for (int i = 0; i < 2; i++) {
-            minStr[i] = alarmTime[i + 4];
+            minStr[i] = alarmTime[i + 4];   // copy minutes into substring
         }
-        alarm.minutes = atoi(minStr);
-        alarm.pm = 0;
-        if (alarmTime[6] == 0x50) {
-            alarm.hours += 12;
-            alarm.pm = 1;
+        alarm.minutes = atoi(minStr);   // save minutes
+        alarm.pm = 0;       // reset pm variable
+        if (alarmTime[6] == 0x50) {     // 0x50 == P, so if PM was entered:
+            alarm.hours += 12;  // add 12 to hours to fix 24 hour conversion
+            alarm.pm = 1;       // set pm flag
         }
     }
     else {
-        unsigned char hoursStr[2];
+        // happens if there was a tens digit for hours, ie /teatime 2 11:00AM
+        unsigned char hoursStr[2];  // substring for hours
         for (int i = 0; i < 2; i++) {
-            hoursStr[i] = alarmTime[i + 2];
+            hoursStr[i] = alarmTime[i + 2];     // copy hours into substring
         }
-        alarm.hours = atoi(hoursStr);
-        unsigned char minStr[2];
+        alarm.hours = atoi(hoursStr);       // save hours
+        unsigned char minStr[2];        // substring for minutes
         for (int i = 0; i < 2; i++) {
-            minStr[i] = alarmTime[i + 5];
+            minStr[i] = alarmTime[i + 5];   // copy minutes into substring
         }
-        alarm.minutes = atoi(minStr);
-        alarm.pm = 0;
-        if (alarmTime[7] == 'P') {
-            alarm.hours += 12;
-            alarm.pm = 1;
+        alarm.minutes = atoi(minStr);       // save minutes
+        alarm.pm = 0;       // reset pm flag
+        if (alarmTime[7] == 0x50) {  // 0x50 == P, so if PM was entered:
+            alarm.hours += 12;      // add 12 to hours to fix 24 hour conversion
+            alarm.pm = 1;           // set pm flag
         }
     }
 }
 
 void parseTime(unsigned char * rawTime) {
-        uint8_t foundFirst = 0;
-        uint32_t i = 0;
-        uint32_t offset = 0;
-        while (i < strlen(rawTime)) {
-            if (rawTime[i] == 0x3A) {
-                if (foundFirst) {
-                    offset = i - 2;
-                    break;
-                }
-                else {
-                    foundFirst = 1;
-                }
+    // function to parse time data from time server into usable variables
+    uint8_t foundFirst = 0;     // flag for if the first ':' was found, which should be ignored
+    uint32_t offset = 0;        // variable for storing index of where the hours, tens digit starts
+    for (int i = 0; i < strlen(rawTime); i++) { // loop through the rawTime string
+        if (rawTime[i] == 0x3A) {   // 0x3A == :, which is how the time is located, the second ':' found is HH:MM:SS
+            //                                                                                              ^
+            if (foundFirst) {   // if the first ':' has already been skipped
+                offset = i - 2;     // set offset to store the place of the hours, tens digit
+                break;
             }
-            i++;
-        }
-        if (!foundFirst) {
-            receiveString();
-        }
-
-        for (i = 0; i < 5; i++) {
-            if (i < 2) {
-                hoursChar[i] = rawTime[i + offset];
+            else {      // otherwise this was the first ':', and set the flag
+                foundFirst = 1;
             }
-            else if (i > 2) {
-                minutesChar[i - 3] = rawTime[i + offset];
-            }
-        }
-        hoursChar[2] = '\0';
-        minutesChar[2] = '\0';
-        currentTime.hours = atoi(hoursChar);
-        currentTime.minutes = atoi(minutesChar);
-        if (currentTime.hours < 4) {
-            currentTime.hours += 24;
-        }
-        currentTime.hours -= 4;
-        if (currentTime.hours == 0) {
-            currentTime.hours += 12;
-        }
-        currentTime.alarmEnabled = 0;
-        formatTime(&currentTime);
-}
-
-uint8_t testEndString(unsigned char * str, unsigned char * end) {
-    if (strlen(str) < strlen(end)) {
-        return 0;
-    }
-    uint32_t start = strlen(str) - strlen(end);
-    for (int i = start; i < strlen(str); i++) {
-        if (str[i] != end[i]) {
-            return 0;
         }
     }
-    return 1;
+    if (!foundFirst) {
+        // if ':' wasn't found, copy buffer into received again
+        receiveString();
+    }
+
+    for (int i = 0; i < 5; i++) {   // now loop through the hours and minutes characters
+        if (i < 2) {    // looking at the hours
+            hoursChar[i] = rawTime[i + offset];
+        }
+        else if (i > 2) {   // looking at the minutes
+            minutesChar[i - 3] = rawTime[i + offset];
+        }
+    }
+    hoursChar[2] = '\0';    // add escape char
+    minutesChar[2] = '\0';  // add escape char
+    currentTime.hours = atoi(hoursChar);        // store hours
+    currentTime.minutes = atoi(minutesChar);    // store minutes
+    if (currentTime.hours < 4) {        // don't underflow when doing time zone conversion
+        currentTime.hours += 24;
+    }
+    currentTime.hours -= 4; // time zone conversion
+    if (currentTime.hours == 0) {   // if it's midnight or anything 12:XX AM
+        currentTime.hours += 12;    // add 12 to convert from 24 hour clock
+    }
+    currentTime.alarmEnabled = 0;   // reset alarm enable flag
+    formatTime(&currentTime);       // use function to format time into a string
 }
 /* USER CODE END 1 */
 

@@ -275,9 +275,11 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 
 /* USER CODE BEGIN 1 */
 void servoDown(){
+    // moves the servo down to flip the switch
 	__HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_3,90);
 }
 void servoUp(){
+    // moves the servo up to disengage the switch
 	__HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_3,120);
 }
 /* USER CODE END 1 */

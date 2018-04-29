@@ -73,9 +73,6 @@ extern uint8_t alarmTimeReady;
 extern uint8_t receivedO;
 extern uint8_t receivedC;
 extern uint32_t result;
-extern uint32_t operand;
-extern uint32_t txWait;
-extern uint32_t rxWait;
 extern uint32_t cups;
 extern uint32_t pumpCups;
 /* USER CODE END Private defines */
@@ -85,12 +82,9 @@ extern void _Error_Handler(char *, int);
 void MX_USART1_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-void wifiConnect();
 void requestTime();
 void parseTime(unsigned char * rawTime);
-void requestAlarm();
 void parseAlarm(unsigned char * alarmTime);
-uint8_t testEndString(unsigned char * a, unsigned char * b);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

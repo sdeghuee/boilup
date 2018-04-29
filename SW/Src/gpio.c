@@ -109,59 +109,52 @@ void MX_GPIO_Init(void)
 void matrixDebounce(uint32_t column){
     switch (column) {
         case 1:
-//            GPIOC->ODR |= 0x00001000;//col3
-//            GPIOD->ODR |= 0x00000004;//col2
-//            GPIOB->ODR &= 0xFFFFFFF7;//col1
+            // turn off all column pins, except for COL1
             HAL_GPIO_WritePin(COL2_PORT, COL2_PIN, 1);
             HAL_GPIO_WritePin(COL3_PORT, COL3_PIN, 1);
             HAL_GPIO_WritePin(COL1_PORT, COL1_PIN, 0);
             break;
         case 2:
-//            GPIOB->ODR |= 0x00000008;
-//            GPIOC->ODR |= 0x00001000;
-//            GPIOD->ODR &= 0xFFFFFFFB;
+            // turn off all column pins, except for COL2
             HAL_GPIO_WritePin(COL1_PORT, COL1_PIN, 1);
             HAL_GPIO_WritePin(COL3_PORT, COL3_PIN, 1);
             HAL_GPIO_WritePin(COL2_PORT, COL2_PIN, 0);
             break;
         case 3:
-//            GPIOB->ODR |= 0x00000008;
-//            GPIOD->ODR |= 0x00000004;
-//            GPIOC->ODR &= 0xFFFFEFFF;
+            // turn off all column pins, except for COL3
             HAL_GPIO_WritePin(COL1_PORT, COL1_PIN, 1);
             HAL_GPIO_WritePin(COL2_PORT, COL2_PIN, 1);
             HAL_GPIO_WritePin(COL3_PORT, COL3_PIN, 0);
             break;
     }
-    for (uint32_t row = 0; row < 4; row++) {
-//        btnCurrent[(column - 1)*4 + row] = !(GPIOB->IDR & (0x10 << (3-row)));
+    for (uint32_t row = 0; row < 4; row++) {    // loop through the rows
         switch (row) {
             case 0:
-                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10));
+                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10));     // check row 1 pin
                 break;
             case 1:
-                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11));
+                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11));     // check row 2 pin
                 break;
             case 2:
-                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12));
+                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12));     // check row 3 pin
                 break;
             case 3:
-                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13));
+                btnCurrent[(column - 1)*4 + row] = !(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13));     // check row 4 pin
                 break;
         }
-//        uint32_t a = !(GPIOB->IDR & (0x400 << row));
-//        btnCurrent[(column - 1)*4 + row] = a;
-        matrixButtonDebounce((column - 1)*4 + row);
+        matrixButtonDebounce((column - 1)*4 + row);     // debounce the button defined by current column, row
     }
 }
 
 void matrixButtonDebounce(uint32_t index) {
+    // function to debounce the matrix buttons
     btnPress[index] = !btnPrevious[index] && btnCurrent[index];
     btnPrevious[index] = btnCurrent[index];
 }
 
 unsigned char matrixGetButton(uint32_t index) {
-    unsigned char pData;
+    // function to convert from button index into character
+    unsigned char pData;    // stores pressed character
     switch (index) {
         case 0:   // 1
           pData = '1';
